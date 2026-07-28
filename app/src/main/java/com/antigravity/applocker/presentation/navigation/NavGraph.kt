@@ -9,6 +9,7 @@ import com.antigravity.applocker.presentation.dashboard.DashboardScreen
 import com.antigravity.applocker.data.security.SecurityPreferences
 import com.antigravity.applocker.util.HashUtil
 import com.antigravity.applocker.presentation.settings.SetupPinScreen
+import com.antigravity.applocker.presentation.settings.SettingsScreen
 
 @Composable
 fun NavGraph(
