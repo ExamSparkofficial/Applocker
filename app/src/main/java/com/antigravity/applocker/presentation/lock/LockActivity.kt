@@ -155,13 +155,7 @@ fun LockScreenUI(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Spacer(modifier = Modifier.height(32.dp))
-            Image(
-                painter = painterResource(id = R.mipmap.ic_launcher),
-                contentDescription = "App Logo",
-                modifier = Modifier.size(100.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(48.dp))
             Text(
                 text = "App Locked",
                 style = MaterialTheme.typography.headlineMedium,
