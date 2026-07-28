@@ -30,6 +30,7 @@ class SecurityPreferences @Inject constructor(
         private const val KEY_HASHED_PASSWORD = "key_hashed_password"
         private const val KEY_PATTERN_STRING = "key_pattern_string"
         private const val KEY_SALT = "key_salt"
+        private const val KEY_WALLPAPER_URI = "key_wallpaper_uri"
     }
 
     fun saveHashedPin(hash: String) {
@@ -55,4 +56,10 @@ class SecurityPreferences @Inject constructor(
     }
 
     fun getSalt(): String? = sharedPreferences.getString(KEY_SALT, null)
+
+    fun saveWallpaperUri(uri: String) {
+        sharedPreferences.edit().putString(KEY_WALLPAPER_URI, uri).apply()
+    }
+
+    fun getWallpaperUri(): String? = sharedPreferences.getString(KEY_WALLPAPER_URI, null)
 }

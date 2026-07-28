@@ -106,6 +106,7 @@ fun LockScreenUI(
 ) {
     var enteredPin by remember { mutableStateOf("") }
     var errorMsg by remember { mutableStateOf("") }
+    var showPinPad by remember { mutableStateOf(false) }
     val requiredPinLength = 4 
     val coroutineScope = rememberCoroutineScope()
 
@@ -126,50 +127,102 @@ fun LockScreenUI(
         }
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = Icons.Default.Lock,
-            contentDescription = "Locked",
-            modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Enter PIN",
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Text(
-            text = "App Locked: $packageName",
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        
-        PinDots(
-            pinLength = requiredPinLength,
-            currentLength = enteredPin.length
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        val wallpaperUri = securityPreferences.getWallpaperUri()
+        if (wallpaperUri != null) {
+            coil.compose.AsyncImage(
+                model = wallpaperUri,
+                contentDescription = "Wallpaper",
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .androidx.compose.foundation.background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f))
+            )
+        }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Column(
+            modifier = Modifier.fillMaxSize().padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Spacer(modifier = Modifier.height(32.dp))
+            androidx.compose.foundation.Image(
+                painter = androidx.compose.ui.res.painterResource(id = com.antigravity.applocker.R.mipmap.ic_launcher),
+                contentDescription = "App Logo",
+                modifier = Modifier.size(100.dp)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "App Locked",
+                style = MaterialTheme.typography.headlineMedium,
+                color = androidx.compose.ui.graphics.Color.White
+            )
+            Text(
+                text = packageName,
+                style = MaterialTheme.typography.bodyMedium,
+                color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.7f)
+            )
 
-        PinPad(
-            onNumberClick = { num ->
-                if (enteredPin.length < requiredPinLength) {
-                    enteredPin += num
+            if (!showPinPad) {
+                Spacer(modifier = Modifier.weight(1f))
+                if (isBiometricAvailable) {
+                    Icon(
+                        imageVector = androidx.compose.material.icons.Icons.Default.Fingerprint,
+                        contentDescription = "Fingerprint",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .androidx.compose.foundation.clickable { onBiometricClick() },
+                        tint = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "Touch the fingerprint sensor",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = androidx.compose.ui.graphics.Color.White,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
                 }
-            },
-            onDeleteClick = {
-                if (enteredPin.isNotEmpty()) {
-                    enteredPin = enteredPin.dropLast(1)
+                Spacer(modifier = Modifier.height(48.dp))
+                OutlinedButton(
+                    onClick = { showPinPad = true },
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = androidx.compose.ui.graphics.Color.White)
+                ) {
+                    Text("Use PIN")
                 }
-            },
-            onBiometricClick = onBiometricClick,
-            showBiometricIcon = isBiometricAvailable
-        )
-        
-        Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(32.dp))
+            } else {
+                Spacer(modifier = Modifier.height(32.dp))
+                PinDots(
+                    pinLength = requiredPinLength,
+                    currentLength = enteredPin.length
+                )
+                if (errorMsg.isNotEmpty()) {
+                    Text(
+                        text = errorMsg,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                PinPad(
+                    onNumberClick = { num ->
+                        if (enteredPin.length < requiredPinLength) {
+                            enteredPin += num
+                            errorMsg = ""
+                        }
+                    },
+                    onDeleteClick = {
+                        if (enteredPin.isNotEmpty()) {
+                            enteredPin = enteredPin.dropLast(1)
+                        }
+                    },
+                    onBiometricClick = onBiometricClick,
+                    showBiometricIcon = isBiometricAvailable
+                )
+                Spacer(modifier = Modifier.height(32.dp))
+            }
+        }
     }
 }

@@ -136,6 +136,39 @@ fun SettingsScreen(
                     }
                 )
             }
+
+            item {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+                Text(
+                    text = "Customization",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
+            item {
+                val securityPreferences = androidx.compose.runtime.remember { 
+                    dagger.hilt.android.EntryPointAccessors.fromApplication(context.applicationContext, com.antigravity.applocker.di.SecurityEntryPoint::class.java).securityPreferences() 
+                }
+                var wallpaperUri by androidx.compose.runtime.remember { mutableStateOf(securityPreferences.getWallpaperUri()) }
+                
+                val launcher = androidx.activity.compose.rememberLauncherForActivityResult(
+                    androidx.activity.result.contract.ActivityResultContracts.GetContent()
+                ) { uri ->
+                    if (uri != null) {
+                        context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        securityPreferences.saveWallpaperUri(uri.toString())
+                        wallpaperUri = uri.toString()
+                    }
+                }
+                
+                SettingsItem(
+                    title = "Set Lock Screen Wallpaper",
+                    subtitle = if (wallpaperUri != null) "Custom wallpaper is set" else "Choose an image from gallery",
+                    onClick = { launcher.launch("image/*") }
+                )
+            }
             
             item {
                 SettingsSwitch(
