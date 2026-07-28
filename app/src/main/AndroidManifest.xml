@@ -40,7 +40,8 @@
             android:exported="false"
             android:excludeFromRecents="true"
             android:noHistory="true"
-            android:launchMode="singleTask"
+            android:taskAffinity="com.antigravity.applocker.lockscreen"
+            android:launchMode="singleInstance"
             android:theme="@style/Theme.AppLocker" />
             
         <service
