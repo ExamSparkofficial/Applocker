@@ -22,6 +22,7 @@ fun HiddenAppsScreen(
     viewModel: HiddenAppsViewModel = hiltViewModel()
 ) {
     val hiddenAppsState by viewModel.hiddenAppsState.collectAsState()
+    val isDeviceOwner by viewModel.isDeviceOwner.collectAsState()
 
     Scaffold(
         topBar = {
@@ -40,7 +41,6 @@ fun HiddenAppsScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            val isDeviceOwner = viewModel.isDeviceOwner.collectAsState().value
             item {
                 if (!isDeviceOwner) {
                     Card(
