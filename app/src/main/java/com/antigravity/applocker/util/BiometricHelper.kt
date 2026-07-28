@@ -50,10 +50,10 @@ class BiometricHelper @Inject constructor() {
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(title)
             .setSubtitle(subtitle)
+            .setNegativeButtonText("Use App PIN")
             .setAllowedAuthenticators(
                 BiometricManager.Authenticators.BIOMETRIC_STRONG or 
-                BiometricManager.Authenticators.BIOMETRIC_WEAK or 
-                BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                BiometricManager.Authenticators.BIOMETRIC_WEAK
             )
             .build()
 
