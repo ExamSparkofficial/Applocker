@@ -26,12 +26,13 @@ class MainActivity : ComponentActivity() {
         checkPermissionsAndStartService()
         
         setContent {
+            val route = intent.getStringExtra("ROUTE")
             AppLockerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NavGraph()
+                    NavGraph(initialRoute = route)
                 }
             }
         }

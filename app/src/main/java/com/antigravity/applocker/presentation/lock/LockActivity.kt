@@ -86,11 +86,20 @@ class LockActivity : FragmentActivity() {
     }
 
     private fun unlockSuccess(packageName: String) {
-        val serviceIntent = Intent(this, AppLockService::class.java).apply {
-            putExtra("UNLOCKED_PACKAGE", packageName)
+        if (packageName == "HIDDEN_VAULT") {
+            val intent = Intent(this, com.antigravity.applocker.MainActivity::class.java).apply {
+                putExtra("ROUTE", com.antigravity.applocker.presentation.navigation.Routes.HiddenApps.route)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            startActivity(intent)
+            finish()
+        } else {
+            val serviceIntent = Intent(this, AppLockService::class.java).apply {
+                putExtra("UNLOCKED_PACKAGE", packageName)
+            }
+            startService(serviceIntent)
+            finish()
         }
-        startService(serviceIntent)
-        finish()
     }
 
     override fun onBackPressed() {

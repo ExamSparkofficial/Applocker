@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">AppLocker</string>
+    <string name="accessibility_service_description">Used by AppLocker to detect Volume Key presses for the Hidden Apps Vault trigger.</string>
 </resources>

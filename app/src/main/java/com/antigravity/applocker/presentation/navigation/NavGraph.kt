@@ -19,9 +19,10 @@ fun NavGraph(
     },
     hashUtil: HashUtil = androidx.compose.ui.platform.LocalContext.current.let {
         dagger.hilt.android.EntryPointAccessors.fromApplication(it, com.antigravity.applocker.di.SecurityEntryPoint::class.java).hashUtil()
-    }
+    },
+    initialRoute: String? = null
 ) {
-    val startDestination = if (securityPreferences.getHashedPin().isNullOrEmpty()) Routes.SetupPin.route else Routes.Dashboard.route
+    val startDestination = initialRoute ?: if (securityPreferences.getHashedPin().isNullOrEmpty()) Routes.SetupPin.route else Routes.Dashboard.route
 
     NavHost(
         navController = navController,
@@ -49,6 +50,11 @@ fun NavGraph(
             SettingsScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToSetupPin = { navController.navigate(Routes.SetupPin.route) }
+            )
+        }
+        composable(Routes.HiddenApps.route) {
+            com.antigravity.applocker.presentation.hidden.HiddenAppsScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
         composable(Routes.LockScreen.route) { backStackEntry ->

@@ -21,12 +21,20 @@ object DatabaseModule {
             app,
             AppLockerDatabase::class.java,
             AppLockerDatabase.DATABASE_NAME
-        ).build()
+        )
+        .fallbackToDestructiveMigration()
+        .build()
     }
 
     @Provides
     @Singleton
     fun provideAppLockerDao(db: AppLockerDatabase): AppLockerDao {
         return db.dao
+    }
+
+    @Provides
+    @Singleton
+    fun provideHiddenAppDao(db: AppLockerDatabase): com.antigravity.applocker.data.local.dao.HiddenAppDao {
+        return db.hiddenAppDao
     }
 }

@@ -28,6 +28,14 @@ class AppLockService : Service() {
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, createNotification())
         appLockerEngine.start()
+        
+        // Start GestureOverlayService
+        try {
+            val gestureIntent = Intent(this, com.antigravity.applocker.triggers.GestureOverlayService::class.java)
+            startService(gestureIntent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -63,6 +71,7 @@ class AppLockService : Service() {
             ).apply {
                 description = "Keeps the app lock engine running in the background"
             }
+            
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             manager.createNotificationChannel(serviceChannel)
         }
