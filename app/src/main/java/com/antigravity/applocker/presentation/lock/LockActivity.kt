@@ -12,6 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material.icons.filled.Fingerprint
+import com.antigravity.applocker.R
 import com.antigravity.applocker.data.security.SecurityPreferences
 import com.antigravity.applocker.lockengine.AppLockService
 import com.antigravity.applocker.presentation.lock.components.PinDots
@@ -139,7 +146,7 @@ fun LockScreenUI(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .androidx.compose.foundation.background(androidx.compose.ui.graphics.Color.Black.copy(alpha = 0.6f))
+                    .background(Color.Black.copy(alpha = 0.6f))
             )
         }
 
@@ -149,8 +156,8 @@ fun LockScreenUI(
             verticalArrangement = Arrangement.Center
         ) {
             Spacer(modifier = Modifier.height(32.dp))
-            androidx.compose.foundation.Image(
-                painter = androidx.compose.ui.res.painterResource(id = com.antigravity.applocker.R.mipmap.ic_launcher),
+            Image(
+                painter = painterResource(id = R.mipmap.ic_launcher),
                 contentDescription = "App Logo",
                 modifier = Modifier.size(100.dp)
             )
@@ -158,36 +165,36 @@ fun LockScreenUI(
             Text(
                 text = "App Locked",
                 style = MaterialTheme.typography.headlineMedium,
-                color = androidx.compose.ui.graphics.Color.White
+                color = Color.White
             )
             Text(
                 text = packageName,
                 style = MaterialTheme.typography.bodyMedium,
-                color = androidx.compose.ui.graphics.Color.White.copy(alpha = 0.7f)
+                color = Color.White.copy(alpha = 0.7f)
             )
 
             if (!showPinPad) {
                 Spacer(modifier = Modifier.weight(1f))
                 if (isBiometricAvailable) {
                     Icon(
-                        imageVector = androidx.compose.material.icons.Icons.Default.Fingerprint,
+                        imageVector = Icons.Default.Fingerprint,
                         contentDescription = "Fingerprint",
                         modifier = Modifier
                             .size(80.dp)
-                            .androidx.compose.foundation.clickable { onBiometricClick() },
+                            .clickable { onBiometricClick() },
                         tint = MaterialTheme.colorScheme.primary
                     )
                     Text(
                         text = "Touch the fingerprint sensor",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = androidx.compose.ui.graphics.Color.White,
+                        color = Color.White,
                         modifier = Modifier.padding(top = 16.dp)
                     )
                 }
                 Spacer(modifier = Modifier.height(48.dp))
                 OutlinedButton(
                     onClick = { showPinPad = true },
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = androidx.compose.ui.graphics.Color.White)
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
                 ) {
                     Text("Use PIN")
                 }
