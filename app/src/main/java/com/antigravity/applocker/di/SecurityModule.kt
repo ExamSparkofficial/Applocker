@@ -23,7 +23,9 @@ object SecurityModule {
 
     @Provides
     @Singleton
-    fun provideHashUtil(): HashUtil = HashUtil()
+    fun provideHashUtil(): HashUtil {
+        return HashUtil()
+    }
 
     @Provides
     @Singleton
@@ -38,4 +40,11 @@ object SecurityModule {
     @Provides
     @Singleton
     fun provideSecurityUtil(): SecurityUtil = SecurityUtil()
+}
+
+@dagger.hilt.EntryPoint
+@dagger.hilt.InstallIn(dagger.hilt.components.SingletonComponent::class)
+interface SecurityEntryPoint {
+    fun securityPreferences(): com.antigravity.applocker.data.security.SecurityPreferences
+    fun hashUtil(): com.antigravity.applocker.util.HashUtil
 }

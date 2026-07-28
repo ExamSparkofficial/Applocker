@@ -14,13 +14,42 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import com.antigravity.applocker.lockengine.AppLockerDeviceAdminReceiver
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
+    onNavigateToSetupPin: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    val devicePolicyManager = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+    val componentName = ComponentName(context, AppLockerDeviceAdminReceiver::class.java)
+    
+    var isAdminActive by androidx.compose.runtime.remember { mutableStateOf(devicePolicyManager.isAdminActive(componentName)) }
+    
+    val lifecycleOwner = LocalLifecycleOwner.current
+    androidx.compose.runtime.DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                isAdminActive = devicePolicyManager.isAdminActive(componentName)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -73,7 +102,7 @@ fun SettingsScreen(
             }
             
             item {
-                Divider(modifier = Modifier.padding(vertical = 16.dp))
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
                 Text(
                     text = "Security",
                     style = MaterialTheme.typography.titleMedium,
@@ -86,7 +115,27 @@ fun SettingsScreen(
                 SettingsItem(
                     title = "Change PIN / Pattern",
                     subtitle = "Update your primary lock method",
-                    onClick = { /* Navigate to Change PIN Screen */ }
+                    onClick = onNavigateToSetupPin
+                )
+            }
+            
+            item {
+                SettingsSwitch(
+                    title = "Uninstall Protection",
+                    subtitle = "Prevent the app from being uninstalled by intruders",
+                    checked = isAdminActive,
+                    onCheckedChange = { active -> 
+                        if (active && !isAdminActive) {
+                            val intent = Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN).apply {
+                                putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, componentName)
+                                putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, "Activate to prevent uninstalling AppLocker")
+                            }
+                            context.startActivity(intent)
+                        } else if (!active && isAdminActive) {
+                            devicePolicyManager.removeActiveAdmin(componentName)
+                            isAdminActive = false
+                        }
+                    }
                 )
             }
             

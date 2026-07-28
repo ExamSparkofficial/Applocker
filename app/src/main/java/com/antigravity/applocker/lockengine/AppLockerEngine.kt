@@ -48,19 +48,20 @@ class AppLockerEngine @Inject constructor(
     }
 
     private suspend fun checkTopActivity() {
-        val topPackage = getTopPackageName() ?: return
+        val topInfo = getTopActivityInfo() ?: return
+        val topPackage = topInfo.first
+        val topClass = topInfo.second
         
-        // Skip if it's our own app to prevent locking ourselves in a loop, unless explicitly locked
-        if (topPackage == context.packageName) return
-        
-        // Check if app was recently unlocked
-        if (topPackage == lastUnlockedApp && (System.currentTimeMillis() - lastUnlockedTime) < 5000) {
-            // Give the user 5 seconds of grace period or implement a better state machine later
-            return
-        }
+        // Never lock our own LockActivity to prevent infinite loops
+        if (topPackage == context.packageName && topClass.contains("LockActivity")) return
 
         val lockedApps = repository.getAllLockedApps().firstOrNull() ?: emptyList()
         val isLocked = lockedApps.any { it.packageName == topPackage }
+
+        if (topPackage != context.packageName && topPackage != lastUnlockedApp) {
+            // User left the unlocked app, clear the grace state so it locks instantly next time
+            lastUnlockedApp = null
+        }
 
         if (isLocked && topPackage != lastUnlockedApp) {
             showLockScreen(topPackage)
@@ -76,11 +77,12 @@ class AppLockerEngine @Inject constructor(
         context.startActivity(intent)
     }
 
-    private fun getTopPackageName(): String? {
+    private fun getTopActivityInfo(): Pair<String, String>? {
         val endTime = System.currentTimeMillis()
         val beginTime = endTime - 10000
         
         var topPackageName: String? = null
+        var topClassName: String? = null
         val usageEvents = usageStatsManager.queryEvents(beginTime, endTime)
         val event = UsageEvents.Event()
         
@@ -88,8 +90,9 @@ class AppLockerEngine @Inject constructor(
             usageEvents.getNextEvent(event)
             if (event.eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
                 topPackageName = event.packageName
+                topClassName = event.className
             }
         }
-        return topPackageName
+        return if (topPackageName != null && topClassName != null) Pair(topPackageName, topClassName) else null
     }
 }

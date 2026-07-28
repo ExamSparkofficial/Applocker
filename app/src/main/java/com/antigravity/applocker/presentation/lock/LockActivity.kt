@@ -18,8 +18,10 @@ import com.antigravity.applocker.presentation.lock.components.PinDots
 import com.antigravity.applocker.presentation.lock.components.PinPad
 import com.antigravity.applocker.presentation.theme.AppLockerTheme
 import com.antigravity.applocker.util.BiometricHelper
+import com.antigravity.applocker.util.HashUtil
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LockActivity : FragmentActivity() {
@@ -29,6 +31,9 @@ class LockActivity : FragmentActivity() {
 
     @Inject
     lateinit var securityPreferences: SecurityPreferences
+    
+    @Inject
+    lateinit var hashUtil: HashUtil
 
     companion object {
         const val EXTRA_PACKAGE_NAME = "extra_package_name"
@@ -64,7 +69,9 @@ class LockActivity : FragmentActivity() {
                                 onFailed = { }
                             )
                         },
-                        isBiometricAvailable = biometricHelper.isBiometricAvailable(this)
+                        isBiometricAvailable = biometricHelper.isBiometricAvailable(this),
+                        securityPreferences = securityPreferences,
+                        hashUtil = hashUtil
                     )
                 }
             }
@@ -93,20 +100,28 @@ fun LockScreenUI(
     packageName: String,
     onUnlockSuccess: () -> Unit,
     onBiometricClick: () -> Unit,
-    isBiometricAvailable: Boolean
+    isBiometricAvailable: Boolean,
+    securityPreferences: SecurityPreferences,
+    hashUtil: HashUtil
 ) {
     var enteredPin by remember { mutableStateOf("") }
-    val requiredPinLength = 4 // In a real scenario, fetch from SecurityPreferences
+    var errorMsg by remember { mutableStateOf("") }
+    val requiredPinLength = 4 
+    val coroutineScope = rememberCoroutineScope()
 
-    // Simple auto-verify logic for Phase 6
     LaunchedEffect(enteredPin) {
         if (enteredPin.length == requiredPinLength) {
-            // For now, any 4-digit PIN works. In Phase 7 (Settings) we'll actually let the user set it.
-            // If it matches SecurityPreferences.getHashedPin(), then unlock.
-            if (enteredPin == "1234" || true) { // Simulated success
-                onUnlockSuccess()
-            } else {
-                enteredPin = "" // Reset on fail
+            coroutineScope.launch {
+                val salt = securityPreferences.getSalt() ?: ""
+                val savedHash = securityPreferences.getHashedPin()
+                
+                val currentHash = hashUtil.hashSHA256(enteredPin, salt)
+                if (currentHash == savedHash) {
+                    onUnlockSuccess()
+                } else {
+                    errorMsg = "Incorrect PIN"
+                    enteredPin = ""
+                }
             }
         }
     }
