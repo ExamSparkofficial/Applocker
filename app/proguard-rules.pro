@@ -24,3 +24,7 @@
 -dontskipnonpubliclibraryclasses
 -dontpreverify
 -verbose
+
+# Suppress missing class warnings for annotations that are not strictly required at runtime
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn javax.annotation.**
