@@ -48,8 +48,13 @@ fun NavGraph(
         }
         composable(Routes.Settings.route) {
             SettingsScreen(
-                onNavigateBack = { navController.popBackStack() },
-                onNavigateToSetupPin = { navController.navigate(Routes.SetupPin.route) }
+                onNavigateBack = { navController.navigateUp() },
+                onNavigateToSetupPin = {
+                    navController.navigate(Routes.SetupPin.route)
+                },
+                onNavigateToHiddenVault = {
+                    navController.navigate(Routes.HiddenApps.route)
+                }
             )
         }
         composable(Routes.HiddenApps.route) {

@@ -7,6 +7,9 @@ import android.content.Intent
 import android.util.Log
 import com.antigravity.applocker.domain.repository.AppLockerRepository
 import com.antigravity.applocker.presentation.lock.LockActivity
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import com.antigravity.applocker.lockengine.AppLockerDeviceAdminReceiver
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.firstOrNull
@@ -19,12 +22,18 @@ class AppLockerEngine @Inject constructor(
     private val repository: AppLockerRepository
 ) {
     private val usageStatsManager = context.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+    private val devicePolicyManager = context.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+    private val adminComponent = ComponentName(context, AppLockerDeviceAdminReceiver::class.java)
+    
     private var pollingJob: Job? = null
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     
     // Keeps track of the last unlocked app so we don't lock it again immediately
     private var lastUnlockedApp: String? = null
     private var lastUnlockedTime: Long = 0
+    
+    // Keeps track of temporarily unhidden app
+    private var tempUnhiddenApp: String? = null
 
     fun start() {
         if (pollingJob?.isActive == true) return
@@ -47,11 +56,29 @@ class AppLockerEngine @Inject constructor(
         lastUnlockedTime = System.currentTimeMillis()
     }
 
+    fun setTemporarilyUnhiddenApp(packageName: String) {
+        tempUnhiddenApp = packageName
+    }
+
     private suspend fun checkTopActivity() {
         val topInfo = getTopActivityInfo() ?: return
         val topPackage = topInfo.first
         val topClass = topInfo.second
         
+        // Handle temporarily unhidden app
+        val temp = tempUnhiddenApp
+        if (temp != null && topPackage != temp && topPackage != context.packageName) {
+            // User left the temporarily unhidden app and is not in our vault
+            try {
+                if (devicePolicyManager.isDeviceOwnerApp(context.packageName)) {
+                    devicePolicyManager.setApplicationHidden(adminComponent, temp, true)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            tempUnhiddenApp = null
+        }
+
         // Never lock our own LockActivity to prevent infinite loops
         if (topPackage == context.packageName && topClass.contains("LockActivity")) return
 

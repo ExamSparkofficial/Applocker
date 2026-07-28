@@ -27,6 +27,7 @@ import com.antigravity.applocker.lockengine.AppLockerDeviceAdminReceiver
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToSetupPin: () -> Unit,
+    onNavigateToHiddenVault: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -114,6 +115,14 @@ fun SettingsScreen(
                     title = "Change PIN / Pattern",
                     subtitle = "Update your primary lock method",
                     onClick = onNavigateToSetupPin
+                )
+            }
+            
+            item {
+                SettingsItem(
+                    title = "Manage Hidden Vault",
+                    subtitle = "Hide apps from your home screen (Requires Device Owner)",
+                    onClick = onNavigateToHiddenVault
                 )
             }
             

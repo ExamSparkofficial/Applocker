@@ -27,7 +27,7 @@ fun HiddenAppsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Hidden Apps") },
+                title = { Text("Secret Vault") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -36,41 +36,103 @@ fun HiddenAppsScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
+        var selectedTabIndex by remember { mutableStateOf(0) }
+        val tabs = listOf("My Vault", "Manage")
+
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            item {
-                if (!isDeviceOwner) {
-                    Card(
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
-                        modifier = Modifier.fillMaxWidth().padding(16.dp)
-                    ) {
-                        Text(
-                            text = "Device Owner Not Set! Apps will not actually hide until you run the ADB command from your PC.",
-                            color = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.padding(16.dp)
-                        )
+            TabRow(selectedTabIndex = selectedTabIndex) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(
+                        selected = selectedTabIndex == index,
+                        onClick = { selectedTabIndex = index },
+                        text = { Text(title) }
+                    )
+                }
+            }
+
+            if (!isDeviceOwner) {
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp)
+                ) {
+                    Text(
+                        text = "Device Owner Not Set! Apps will not actually hide until you run the ADB command from your PC.",
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            }
+
+            when (selectedTabIndex) {
+                0 -> {
+                    // My Vault Tab
+                    val hiddenApps = hiddenAppsState.filter { it.isHidden }
+                    if (hiddenApps.isEmpty()) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text("No hidden apps yet. Go to Manage to hide some.")
+                        }
+                    } else {
+                        LazyColumn(modifier = Modifier.fillMaxSize()) {
+                            items(hiddenApps) { appItem ->
+                                HiddenAppLaunchRow(
+                                    appItem = appItem,
+                                    onLaunch = { viewModel.launchHiddenApp(appItem.packageName) }
+                                )
+                            }
+                        }
                     }
-                } else {
+                }
+                1 -> {
+                    // Manage Tab
                     Text(
                         text = "Apps selected here will vanish from your phone's home screen.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(16.dp)
                     )
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        items(hiddenAppsState) { appItem ->
+                            HiddenAppRow(
+                                appItem = appItem,
+                                onToggle = { isHidden ->
+                                    viewModel.toggleAppHidden(appItem.packageName, isHidden)
+                                }
+                            )
+                        }
+                    }
                 }
             }
-            items(hiddenAppsState) { appItem ->
-                HiddenAppRow(
-                    appItem = appItem,
-                    onToggle = { isHidden ->
-                        viewModel.toggleAppHidden(appItem.packageName, isHidden)
-                    }
-                )
-            }
         }
+    }
+}
+
+@Composable
+fun HiddenAppLaunchRow(
+    appItem: HiddenAppItem,
+    onLaunch: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onLaunch() }
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            bitmap = appItem.icon.toBitmap().asImageBitmap(),
+            contentDescription = appItem.appName,
+            modifier = Modifier.size(48.dp)
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(
+            text = appItem.appName,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f)
+        )
     }
 }
 

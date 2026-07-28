@@ -30,6 +30,7 @@ data class HiddenAppItem(
 @HiltViewModel
 class HiddenAppsViewModel @Inject constructor(
     private val hiddenAppDao: HiddenAppDao,
+    private val appLockerEngine: com.antigravity.applocker.lockengine.AppLockerEngine,
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
@@ -89,6 +90,29 @@ class HiddenAppsViewModel @Inject constructor(
                     hiddenAppDao.insertHiddenApp(HiddenAppEntity(packageName))
                 } else {
                     hiddenAppDao.deleteHiddenApp(packageName)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun launchHiddenApp(packageName: String) {
+        viewModelScope.launch {
+            try {
+                // 1. Unhide it temporarily
+                if (devicePolicyManager.isDeviceOwnerApp(context.packageName)) {
+                    devicePolicyManager.setApplicationHidden(adminComponent, packageName, false)
+                }
+                
+                // 2. Tell engine to track it
+                appLockerEngine.setTemporarilyUnhiddenApp(packageName)
+                
+                // 3. Launch it!
+                val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+                if (launchIntent != null) {
+                    launchIntent.addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(launchIntent)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
