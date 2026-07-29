@@ -63,7 +63,18 @@ fun DrawerContent(
         Spacer(Modifier.weight(1f))
         
         NavigationDrawerItem(
-            icon = { Icon(Icons.Default.Settings, contentDescription = null) },
+            icon = { Icon(Icons.Default.Share, contentDescription = "File Sharing") },
+            label = { Text("File Sharing") },
+            selected = currentRoute == Routes.FileSharing.route,
+            onClick = {
+                onNavigate(Routes.FileSharing.route)
+                closeDrawer()
+            },
+            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+        )
+        
+        NavigationDrawerItem(
+            icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
             label = { Text("Settings") },
             selected = currentRoute == Routes.Settings.route,
             onClick = {
