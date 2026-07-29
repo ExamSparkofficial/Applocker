@@ -7,14 +7,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import com.antigravity.applocker.data.local.AppLockerDatabase;
+import com.antigravity.applocker.data.local.VaultMediaDao;
 import com.antigravity.applocker.data.local.dao.AppLockerDao;
 import com.antigravity.applocker.data.local.dao.HiddenAppDao;
 import com.antigravity.applocker.data.local.datastore.SettingsDataStore;
 import com.antigravity.applocker.data.repository.AppLockerRepositoryImpl;
+import com.antigravity.applocker.data.repository.MediaVaultRepository;
 import com.antigravity.applocker.data.security.SecurityPreferences;
 import com.antigravity.applocker.di.DatabaseModule_ProvideAppLockerDaoFactory;
 import com.antigravity.applocker.di.DatabaseModule_ProvideAppLockerDatabaseFactory;
 import com.antigravity.applocker.di.DatabaseModule_ProvideHiddenAppDaoFactory;
+import com.antigravity.applocker.di.DatabaseModule_ProvideVaultMediaDaoFactory;
 import com.antigravity.applocker.di.SecurityModule_ProvideHashUtilFactory;
 import com.antigravity.applocker.di.SecurityModule_ProvideSecurityPreferencesFactory;
 import com.antigravity.applocker.lockengine.AppLockService;
@@ -26,10 +29,16 @@ import com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel;
 import com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel_HiltModules;
 import com.antigravity.applocker.presentation.lock.LockActivity;
 import com.antigravity.applocker.presentation.lock.LockActivity_MembersInjector;
+import com.antigravity.applocker.presentation.media.MediaGalleryViewModel;
+import com.antigravity.applocker.presentation.media.MediaGalleryViewModel_HiltModules;
+import com.antigravity.applocker.presentation.media.MediaViewerViewModel;
+import com.antigravity.applocker.presentation.media.MediaViewerViewModel_HiltModules;
 import com.antigravity.applocker.presentation.settings.SettingsViewModel;
 import com.antigravity.applocker.presentation.settings.SettingsViewModel_HiltModules;
 import com.antigravity.applocker.util.BiometricHelper;
 import com.antigravity.applocker.util.HashUtil;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.ViewModelLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
@@ -51,10 +60,8 @@ import dagger.internal.DoubleCheck;
 import dagger.internal.IdentifierNameString;
 import dagger.internal.KeepFieldType;
 import dagger.internal.LazyClassKeyMap;
-import dagger.internal.MapBuilder;
 import dagger.internal.Preconditions;
 import dagger.internal.Provider;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.processing.Generated;
@@ -396,7 +403,7 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(3).put(LazyClassKeyProvider.com_antigravity_applocker_presentation_dashboard_DashboardViewModel, DashboardViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel, HiddenAppsViewModel_HiltModules.KeyModule.provide()).put(LazyClassKeyProvider.com_antigravity_applocker_presentation_settings_SettingsViewModel, SettingsViewModel_HiltModules.KeyModule.provide()).build());
+      return LazyClassKeyMap.<Boolean>of(ImmutableMap.<String, Boolean>of(LazyClassKeyProvider.com_antigravity_applocker_presentation_dashboard_DashboardViewModel, DashboardViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel, HiddenAppsViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_antigravity_applocker_presentation_media_MediaGalleryViewModel, MediaGalleryViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_antigravity_applocker_presentation_media_MediaViewerViewModel, MediaViewerViewModel_HiltModules.KeyModule.provide(), LazyClassKeyProvider.com_antigravity_applocker_presentation_settings_SettingsViewModel, SettingsViewModel_HiltModules.KeyModule.provide()));
     }
 
     @Override
@@ -423,20 +430,30 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
+      static String com_antigravity_applocker_presentation_dashboard_DashboardViewModel = "com.antigravity.applocker.presentation.dashboard.DashboardViewModel";
+
       static String com_antigravity_applocker_presentation_settings_SettingsViewModel = "com.antigravity.applocker.presentation.settings.SettingsViewModel";
+
+      static String com_antigravity_applocker_presentation_media_MediaGalleryViewModel = "com.antigravity.applocker.presentation.media.MediaGalleryViewModel";
+
+      static String com_antigravity_applocker_presentation_media_MediaViewerViewModel = "com.antigravity.applocker.presentation.media.MediaViewerViewModel";
 
       static String com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel = "com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel";
 
-      static String com_antigravity_applocker_presentation_dashboard_DashboardViewModel = "com.antigravity.applocker.presentation.dashboard.DashboardViewModel";
+      @KeepFieldType
+      DashboardViewModel com_antigravity_applocker_presentation_dashboard_DashboardViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_antigravity_applocker_presentation_settings_SettingsViewModel2;
 
       @KeepFieldType
-      HiddenAppsViewModel com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel2;
+      MediaGalleryViewModel com_antigravity_applocker_presentation_media_MediaGalleryViewModel2;
 
       @KeepFieldType
-      DashboardViewModel com_antigravity_applocker_presentation_dashboard_DashboardViewModel2;
+      MediaViewerViewModel com_antigravity_applocker_presentation_media_MediaViewerViewModel2;
+
+      @KeepFieldType
+      HiddenAppsViewModel com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel2;
     }
   }
 
@@ -450,6 +467,10 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
     private Provider<DashboardViewModel> dashboardViewModelProvider;
 
     private Provider<HiddenAppsViewModel> hiddenAppsViewModelProvider;
+
+    private Provider<MediaGalleryViewModel> mediaGalleryViewModelProvider;
+
+    private Provider<MediaViewerViewModel> mediaViewerViewModelProvider;
 
     private Provider<SettingsViewModel> settingsViewModelProvider;
 
@@ -468,24 +489,30 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
         final ViewModelLifecycle viewModelLifecycleParam) {
       this.dashboardViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 0);
       this.hiddenAppsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
-      this.settingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.mediaGalleryViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
+      this.mediaViewerViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
+      this.settingsViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(3).put(LazyClassKeyProvider.com_antigravity_applocker_presentation_dashboard_DashboardViewModel, ((Provider) dashboardViewModelProvider)).put(LazyClassKeyProvider.com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel, ((Provider) hiddenAppsViewModelProvider)).put(LazyClassKeyProvider.com_antigravity_applocker_presentation_settings_SettingsViewModel, ((Provider) settingsViewModelProvider)).build());
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(ImmutableMap.<String, javax.inject.Provider<ViewModel>>of(LazyClassKeyProvider.com_antigravity_applocker_presentation_dashboard_DashboardViewModel, ((Provider) dashboardViewModelProvider), LazyClassKeyProvider.com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel, ((Provider) hiddenAppsViewModelProvider), LazyClassKeyProvider.com_antigravity_applocker_presentation_media_MediaGalleryViewModel, ((Provider) mediaGalleryViewModelProvider), LazyClassKeyProvider.com_antigravity_applocker_presentation_media_MediaViewerViewModel, ((Provider) mediaViewerViewModelProvider), LazyClassKeyProvider.com_antigravity_applocker_presentation_settings_SettingsViewModel, ((Provider) settingsViewModelProvider)));
     }
 
     @Override
     public Map<Class<?>, Object> getHiltViewModelAssistedMap() {
-      return Collections.<Class<?>, Object>emptyMap();
+      return ImmutableMap.<Class<?>, Object>of();
     }
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
       static String com_antigravity_applocker_presentation_dashboard_DashboardViewModel = "com.antigravity.applocker.presentation.dashboard.DashboardViewModel";
 
+      static String com_antigravity_applocker_presentation_media_MediaViewerViewModel = "com.antigravity.applocker.presentation.media.MediaViewerViewModel";
+
       static String com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel = "com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel";
+
+      static String com_antigravity_applocker_presentation_media_MediaGalleryViewModel = "com.antigravity.applocker.presentation.media.MediaGalleryViewModel";
 
       static String com_antigravity_applocker_presentation_settings_SettingsViewModel = "com.antigravity.applocker.presentation.settings.SettingsViewModel";
 
@@ -493,7 +520,13 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
       DashboardViewModel com_antigravity_applocker_presentation_dashboard_DashboardViewModel2;
 
       @KeepFieldType
+      MediaViewerViewModel com_antigravity_applocker_presentation_media_MediaViewerViewModel2;
+
+      @KeepFieldType
       HiddenAppsViewModel com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel2;
+
+      @KeepFieldType
+      MediaGalleryViewModel com_antigravity_applocker_presentation_media_MediaGalleryViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_antigravity_applocker_presentation_settings_SettingsViewModel2;
@@ -526,7 +559,13 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
           case 1: // com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel 
           return (T) new HiddenAppsViewModel(singletonCImpl.provideHiddenAppDaoProvider.get(), singletonCImpl.appLockerEngineProvider.get(), ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
-          case 2: // com.antigravity.applocker.presentation.settings.SettingsViewModel 
+          case 2: // com.antigravity.applocker.presentation.media.MediaGalleryViewModel 
+          return (T) new MediaGalleryViewModel(singletonCImpl.mediaVaultRepositoryProvider.get());
+
+          case 3: // com.antigravity.applocker.presentation.media.MediaViewerViewModel 
+          return (T) new MediaViewerViewModel(singletonCImpl.mediaVaultRepositoryProvider.get());
+
+          case 4: // com.antigravity.applocker.presentation.settings.SettingsViewModel 
           return (T) new SettingsViewModel(singletonCImpl.settingsDataStoreProvider.get());
 
           default: throw new AssertionError(id);
@@ -635,6 +674,10 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
 
     private Provider<AppLockerEngine> appLockerEngineProvider;
 
+    private Provider<VaultMediaDao> provideVaultMediaDaoProvider;
+
+    private Provider<MediaVaultRepository> mediaVaultRepositoryProvider;
+
     private Provider<SettingsDataStore> settingsDataStoreProvider;
 
     private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
@@ -653,7 +696,9 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
       this.appLockerRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<AppLockerRepositoryImpl>(singletonCImpl, 3));
       this.provideHiddenAppDaoProvider = DoubleCheck.provider(new SwitchingProvider<HiddenAppDao>(singletonCImpl, 6));
       this.appLockerEngineProvider = DoubleCheck.provider(new SwitchingProvider<AppLockerEngine>(singletonCImpl, 7));
-      this.settingsDataStoreProvider = DoubleCheck.provider(new SwitchingProvider<SettingsDataStore>(singletonCImpl, 8));
+      this.provideVaultMediaDaoProvider = DoubleCheck.provider(new SwitchingProvider<VaultMediaDao>(singletonCImpl, 9));
+      this.mediaVaultRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<MediaVaultRepository>(singletonCImpl, 8));
+      this.settingsDataStoreProvider = DoubleCheck.provider(new SwitchingProvider<SettingsDataStore>(singletonCImpl, 10));
     }
 
     @Override
@@ -672,7 +717,7 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
 
     @Override
     public Set<Boolean> getDisableFragmentGetContextFix() {
-      return Collections.<Boolean>emptySet();
+      return ImmutableSet.<Boolean>of();
     }
 
     @Override
@@ -723,7 +768,13 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
           case 7: // com.antigravity.applocker.lockengine.AppLockerEngine 
           return (T) new AppLockerEngine(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.appLockerRepositoryImplProvider.get());
 
-          case 8: // com.antigravity.applocker.data.local.datastore.SettingsDataStore 
+          case 8: // com.antigravity.applocker.data.repository.MediaVaultRepository 
+          return (T) new MediaVaultRepository(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule), singletonCImpl.provideVaultMediaDaoProvider.get());
+
+          case 9: // com.antigravity.applocker.data.local.VaultMediaDao 
+          return (T) DatabaseModule_ProvideVaultMediaDaoFactory.provideVaultMediaDao(singletonCImpl.provideAppLockerDatabaseProvider.get());
+
+          case 10: // com.antigravity.applocker.data.local.datastore.SettingsDataStore 
           return (T) new SettingsDataStore(ApplicationContextModule_ProvideContextFactory.provideContext(singletonCImpl.applicationContextModule));
 
           default: throw new AssertionError(id);
