@@ -33,53 +33,62 @@ class DeviceStorageHelper @Inject constructor(
 ) {
 
     suspend fun getInstalledApps(): List<SharedAppInfo> = withContext(Dispatchers.IO) {
-        val pm = context.packageManager
-        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
-        
-        packages.filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
-            .map { appInfo ->
-                val apkFile = File(appInfo.publicSourceDir)
-                SharedAppInfo(
-                    name = pm.getApplicationLabel(appInfo).toString(),
-                    packageName = appInfo.packageName,
-                    apkUri = Uri.fromFile(apkFile),
-                    size = apkFile.length()
-                )
-            }.sortedBy { it.name }
+        try {
+            val pm = context.packageManager
+            val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+            
+            packages.filter { (it.flags and ApplicationInfo.FLAG_SYSTEM) == 0 }
+                .map { appInfo ->
+                    val apkFile = File(appInfo.publicSourceDir)
+                    SharedAppInfo(
+                        name = pm.getApplicationLabel(appInfo).toString(),
+                        packageName = appInfo.packageName,
+                        apkUri = Uri.fromFile(apkFile),
+                        size = apkFile.length()
+                    )
+                }.sortedBy { it.name }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
+        }
     }
 
     suspend fun getPhotos(): List<SharedMediaInfo> = withContext(Dispatchers.IO) {
         val mediaList = mutableListOf<SharedMediaInfo>()
-        val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        val projection = arrayOf(
-            MediaStore.Images.Media._ID,
-            MediaStore.Images.Media.DISPLAY_NAME,
-            MediaStore.Images.Media.SIZE,
-            MediaStore.Images.Media.MIME_TYPE
-        )
-        val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
+        try {
+            val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            val projection = arrayOf(
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Images.Media.MIME_TYPE
+            )
+            val sortOrder = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
-        context.contentResolver.query(
-            collection,
-            projection,
-            null,
-            null,
-            sortOrder
-        )?.use { cursor ->
-            val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
-            val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
-            val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)
-            val mimeTypeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)
+            context.contentResolver.query(
+                collection,
+                projection,
+                null,
+                null,
+                sortOrder
+            )?.use { cursor ->
+                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
+                val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME)
+                val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)
+                val mimeTypeColumn = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.MIME_TYPE)
 
-            while (cursor.moveToNext()) {
-                val id = cursor.getLong(idColumn)
-                val name = cursor.getString(nameColumn)
-                val size = cursor.getLong(sizeColumn)
-                val mimeType = cursor.getString(mimeTypeColumn)
-                val contentUri = Uri.withAppendedPath(collection, id.toString())
+                while (cursor.moveToNext()) {
+                    val id = cursor.getLong(idColumn)
+                    val name = cursor.getString(nameColumn)
+                    val size = cursor.getLong(sizeColumn)
+                    val mimeType = cursor.getString(mimeTypeColumn)
+                    val contentUri = Uri.withAppendedPath(collection, id.toString())
 
-                mediaList.add(SharedMediaInfo(id, name ?: "Unknown", contentUri, size, mimeType))
+                    mediaList.add(SharedMediaInfo(id, name ?: "Unknown", contentUri, size, mimeType))
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         mediaList
     }
