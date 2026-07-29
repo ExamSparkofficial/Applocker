@@ -9,13 +9,14 @@ import com.antigravity.applocker.data.local.entity.LockedAppEntity
 import com.antigravity.applocker.data.local.entity.HiddenAppEntity
 
 @Database(
-    entities = [LockedAppEntity::class, IntruderLogEntity::class, HiddenAppEntity::class],
-    version = 2,
+    entities = [LockedAppEntity::class, IntruderLogEntity::class, HiddenAppEntity::class, VaultMediaEntity::class],
+    version = 3,
     exportSchema = false
 )
 abstract class AppLockerDatabase : RoomDatabase() {
     abstract val dao: AppLockerDao
     abstract val hiddenAppDao: HiddenAppDao
+    abstract val vaultMediaDao: VaultMediaDao
 
     companion object {
         const val DATABASE_NAME = "applocker_db"

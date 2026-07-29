@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_service_description">Used by AppLocker to detect Volume Key presses for the Hidden Apps Vault trigger.</string>
+    <string name="app_name">AppLocker</string>
+    <style name="Theme.AppLocker" parent="android:Theme.Material.Light.NoActionBar"/>
+</resources>

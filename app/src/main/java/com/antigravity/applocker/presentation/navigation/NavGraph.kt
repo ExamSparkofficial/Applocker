@@ -11,6 +11,11 @@ import com.antigravity.applocker.util.HashUtil
 import com.antigravity.applocker.presentation.settings.SetupPinScreen
 import com.antigravity.applocker.presentation.settings.SettingsScreen
 
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.navigation.compose.currentBackStackEntryAsState
+import kotlinx.coroutines.launch
+
 @Composable
 fun NavGraph(
     navController: NavHostController = rememberNavController(),
@@ -23,48 +28,95 @@ fun NavGraph(
     initialRoute: String? = null
 ) {
     val startDestination = initialRoute ?: if (securityPreferences.getHashedPin().isNullOrEmpty()) Routes.SetupPin.route else Routes.Dashboard.route
+    
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
 
-    NavHost(
-        navController = navController,
-        startDestination = startDestination
-    ) {
-        composable(Routes.SetupPin.route) {
-            SetupPinScreen(
-                onPinSet = {
-                    navController.navigate(Routes.Dashboard.route) {
-                        popUpTo(Routes.SetupPin.route) { inclusive = true }
+    // Don't allow drawer on SetupPin or LockScreen
+    val gesturesEnabled = currentRoute != Routes.SetupPin.route && currentRoute != Routes.LockScreen.route
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        gesturesEnabled = gesturesEnabled,
+        drawerContent = {
+            DrawerContent(
+                currentRoute = currentRoute,
+                onNavigate = { route ->
+                    navController.navigate(route) {
+                        // Pop up to the start destination of the graph to
+                        // avoid building up a large stack of destinations
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        // Avoid multiple copies of the same destination
+                        launchSingleTop = true
+                        // Restore state when reselecting a previously selected item
+                        restoreState = true
                     }
                 },
-                securityPreferences = securityPreferences,
-                hashUtil = hashUtil
+                closeDrawer = { scope.launch { drawerState.close() } }
             )
         }
-        composable(Routes.Dashboard.route) {
-            DashboardScreen(
-                onNavigateToSettings = {
-                    navController.navigate(Routes.Settings.route)
-                }
-            )
-        }
-        composable(Routes.Settings.route) {
-            SettingsScreen(
-                onNavigateBack = { navController.navigateUp() },
-                onNavigateToSetupPin = {
-                    navController.navigate(Routes.SetupPin.route)
-                },
-                onNavigateToHiddenVault = {
-                    navController.navigate(Routes.HiddenApps.route)
-                }
-            )
-        }
-        composable(Routes.HiddenApps.route) {
-            com.antigravity.applocker.presentation.hidden.HiddenAppsScreen(
-                onNavigateBack = { navController.popBackStack() }
-            )
-        }
-        composable(Routes.LockScreen.route) { backStackEntry ->
-            val packageName = backStackEntry.arguments?.getString("packageName")
-            // LockScreen(packageName)
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = startDestination
+        ) {
+            composable(Routes.SetupPin.route) {
+                SetupPinScreen(
+                    onPinSet = {
+                        navController.navigate(Routes.Dashboard.route) {
+                            popUpTo(Routes.SetupPin.route) { inclusive = true }
+                        }
+                    },
+                    securityPreferences = securityPreferences,
+                    hashUtil = hashUtil
+                )
+            }
+            composable(Routes.Dashboard.route) {
+                DashboardScreen(
+                    onNavigateToSettings = {
+                        navController.navigate(Routes.Settings.route)
+                    }
+                )
+            }
+            composable(Routes.Settings.route) {
+                SettingsScreen(
+                    onNavigateBack = { navController.navigateUp() },
+                    onNavigateToSetupPin = {
+                        navController.navigate(Routes.SetupPin.route)
+                    },
+                    onNavigateToHiddenVault = {
+                        navController.navigate(Routes.HiddenApps.route)
+                    }
+                )
+            }
+            composable(Routes.HiddenApps.route) {
+                com.antigravity.applocker.presentation.hidden.HiddenAppsScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable("media_gallery") {
+                com.antigravity.applocker.presentation.media.MediaGalleryScreen(
+                    onNavigateBack = { navController.popBackStack() },
+                    onNavigateToViewer = { mediaId ->
+                        navController.navigate("media_viewer/$mediaId")
+                    }
+                )
+            }
+            composable("media_viewer/{mediaId}") { backStackEntry ->
+                val mediaId = backStackEntry.arguments?.getString("mediaId") ?: ""
+                com.antigravity.applocker.presentation.media.MediaViewerScreen(
+                    mediaId = mediaId,
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
+            composable(Routes.LockScreen.route) { backStackEntry ->
+                val packageName = backStackEntry.arguments?.getString("packageName")
+                // LockScreen(packageName)
+            }
         }
     }
 }

@@ -1,0 +1,113 @@
+# The proguard configuration file for the following section is C:\Users\Surya\.gemini\antigravity\scratch\AppLocker\app\proguard-rules.pro
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.kts.
+
+# Room Database
+-keep class * extends androidx.room.RoomDatabase
+-keep @androidx.room.Entity class * { *; }
+
+# Hilt & Dagger
+-keep class dagger.hilt.** { *; }
+-keep @dagger.hilt.android.AndroidEntryPoint class * { *; }
+-keep @dagger.hilt.android.lifecycle.HiltViewModel class * { *; }
+
+# Security Crypto
+-keep class androidx.security.crypto.** { *; }
+
+# Coroutines
+-keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+
+# General Android Optimization
+-optimizationpasses 5
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-verbose
+
+# Suppress missing class warnings for annotations that are not strictly required at runtime
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn javax.annotation.**
+
+# End of content from C:\Users\Surya\.gemini\antigravity\scratch\AppLocker\app\proguard-rules.pro
+# The proguard configuration file for the following section is C:\Users\Surya\.gradle\caches\transforms-4\e6a372c9118e7d619490bc8a679facfd\transformed\espresso-core-3.5.1\proguard.txt
+# Common proguard flags for all the espresso libraries.
+
+# ignore 'cannot find java.beans and mockito integration' warnings
+-dontwarn org.hamcrest.**
+
+# ignore 'can't find referenced class sun.misc.Unsafe' from guava
+-dontwarn androidx.test.espresso.core.deps.guava.**
+
+# ignore 'can't find referenced class javax.lang.model.element.Modifier'
+-dontwarn com.squareup.javawriter.JavaWriter
+
+# ignore 'can't find referenced class sun.misc.Unsafe, libcore.io.Memory' from protobuf
+-dontwarn androidx.test.espresso.core.deps.protobuf.**
+
+# ignore 'can't find referenced method android.app.Instrumentation' from android.jar
+-dontwarn androidx.test.runner.MonitoringInstrumentation
+
+# End of content from C:\Users\Surya\.gradle\caches\transforms-4\e6a372c9118e7d619490bc8a679facfd\transformed\espresso-core-3.5.1\proguard.txt
+# The proguard configuration file for the following section is C:\Users\Surya\.gradle\caches\transforms-4\e18f48e8e7e698463037b33eb5f42c0e\transformed\runner-1.5.2\proguard.txt
+# Proguard flags for the AndroidJUnitRunner library.
+
+# avoid obfuscation of the instrumentation runners and orchestrator
+-keepnames class androidx.test.**
+
+# Annotation classes accessed via reflection
+-keep class androidx.test.annotation.** { *; }
+
+# for 'can't find referenced method 'android.app.Instrumentation$ActivityResult execStartActivity' etc
+-dontwarn androidx.test.runner.MonitoringInstrumentation
+
+# for 'library class android.test.* extends or implements program class'
+-dontwarn android.test.**
+
+# for 'can't find referenced class java.lang.management.RuntimeMXBean'
+-dontwarn org.junit.rules.DisableOnDebug
+
+# for 'can't find referenced class java.lang.management.ThreadMXBean'
+-dontwarn org.junit.internal.runners.statements.FailOnTimeout
+
+# for 'can't find referenced class java.beans.**, easymock, etc
+-dontwarn org.hamcrest.**
+# End of content from C:\Users\Surya\.gradle\caches\transforms-4\e18f48e8e7e698463037b33eb5f42c0e\transformed\runner-1.5.2\proguard.txt
+# The proguard configuration file for the following section is C:\Users\Surya\.gradle\caches\transforms-4\8d3dad4cf76036f62307ee3ec65e3385\transformed\monitor-1.6.1\proguard.txt
+# Proguard flags for the AndroidJUnitRunner library.
+
+# avoid obfuscation of the instrumentation runners and orchestrator
+-keepnames class androidx.test.**
+
+# Annotation classes accessed via reflection
+-keep class androidx.test.annotation.** { *; }
+
+# for 'can't find referenced method 'android.app.Instrumentation$ActivityResult execStartActivity' etc
+-dontwarn androidx.test.runner.MonitoringInstrumentation
+
+# for class com.google.errorprone.annotations.InlineMe is not in the runtime classpath
+-dontwarn com.google.errorprone.annotations.InlineMe
+# End of content from C:\Users\Surya\.gradle\caches\transforms-4\8d3dad4cf76036f62307ee3ec65e3385\transformed\monitor-1.6.1\proguard.txt
+# The proguard configuration file for the following section is C:\Users\Surya\.gradle\caches\transforms-4\f75dfc3c0a98d2b261320d7682368335\transformed\rules\lib\META-INF\proguard\coroutines.pro
+# ServiceLoader support
+-keepnames class kotlinx.coroutines.test.internal.TestMainDispatcherFactory {}
+-keepnames class kotlinx.coroutines.android.AndroidExceptionPreHandler {}
+-keepnames class kotlinx.coroutines.android.AndroidDispatcherFactory {}
+
+# Most of volatile fields are updated with AFU and should not be mangled
+-keepclassmembers class kotlinx.coroutines.** {
+    volatile <fields>;
+}
+
+# End of content from C:\Users\Surya\.gradle\caches\transforms-4\f75dfc3c0a98d2b261320d7682368335\transformed\rules\lib\META-INF\proguard\coroutines.pro
+# The proguard configuration file for the following section is <unknown>
+-dontoptimize
+-keep class * {*;}
+-keep interface * {*;}
+-keep enum * {*;}
+-keepattributes *
+# End of content from <unknown>
+# The proguard configuration file for the following section is <unknown>
+-applymapping "C:\Users\Surya\.gemini\antigravity\scratch\AppLocker\app\build\outputs\mapping\debug\mapping.txt"
+# End of content from <unknown>

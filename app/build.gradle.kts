@@ -75,6 +75,12 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.navigation.compose)
     implementation("io.coil-kt:coil-compose:2.6.0")
+    implementation("io.coil-kt:coil-video:2.6.0") // For video thumbnails
+
+    // ExoPlayer (Media3)
+    val media3_version = "1.3.1"
+    implementation("androidx.media3:media3-exoplayer:$media3_version")
+    implementation("androidx.media3:media3-ui:$media3_version")
 
     // Hilt
     implementation(libs.hilt.android)

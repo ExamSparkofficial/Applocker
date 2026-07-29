@@ -37,4 +37,10 @@ object DatabaseModule {
     fun provideHiddenAppDao(db: AppLockerDatabase): com.antigravity.applocker.data.local.dao.HiddenAppDao {
         return db.hiddenAppDao
     }
+
+    @Provides
+    @Singleton
+    fun provideVaultMediaDao(db: AppLockerDatabase): com.antigravity.applocker.data.local.VaultMediaDao {
+        return db.vaultMediaDao
+    }
 }
