@@ -27,6 +27,7 @@ class SecurityPreferences @Inject constructor(
 
     companion object {
         private const val KEY_HASHED_PIN = "key_hashed_pin"
+        private const val KEY_DECOY_HASHED_PIN = "key_decoy_hashed_pin"
         private const val KEY_HASHED_PASSWORD = "key_hashed_password"
         private const val KEY_PATTERN_STRING = "key_pattern_string"
         private const val KEY_SALT = "key_salt"
@@ -38,6 +39,12 @@ class SecurityPreferences @Inject constructor(
     }
 
     fun getHashedPin(): String? = sharedPreferences.getString(KEY_HASHED_PIN, null)
+
+    fun saveDecoyHashedPin(hash: String) {
+        sharedPreferences.edit().putString(KEY_DECOY_HASHED_PIN, hash).apply()
+    }
+
+    fun getDecoyHashedPin(): String? = sharedPreferences.getString(KEY_DECOY_HASHED_PIN, null)
 
     fun saveHashedPassword(hash: String) {
         sharedPreferences.edit().putString(KEY_HASHED_PASSWORD, hash).apply()

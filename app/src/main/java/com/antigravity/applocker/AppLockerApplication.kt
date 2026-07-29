@@ -8,4 +8,8 @@ class AppLockerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
     }
+
+    companion object {
+        var isDecoyMode = false
+    }
 }

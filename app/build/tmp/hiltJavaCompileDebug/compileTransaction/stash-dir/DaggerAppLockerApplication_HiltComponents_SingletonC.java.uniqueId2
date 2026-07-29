@@ -432,28 +432,28 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
     private static final class LazyClassKeyProvider {
       static String com_antigravity_applocker_presentation_dashboard_DashboardViewModel = "com.antigravity.applocker.presentation.dashboard.DashboardViewModel";
 
-      static String com_antigravity_applocker_presentation_settings_SettingsViewModel = "com.antigravity.applocker.presentation.settings.SettingsViewModel";
+      static String com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel = "com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel";
 
       static String com_antigravity_applocker_presentation_media_MediaGalleryViewModel = "com.antigravity.applocker.presentation.media.MediaGalleryViewModel";
 
-      static String com_antigravity_applocker_presentation_media_MediaViewerViewModel = "com.antigravity.applocker.presentation.media.MediaViewerViewModel";
+      static String com_antigravity_applocker_presentation_settings_SettingsViewModel = "com.antigravity.applocker.presentation.settings.SettingsViewModel";
 
-      static String com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel = "com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel";
+      static String com_antigravity_applocker_presentation_media_MediaViewerViewModel = "com.antigravity.applocker.presentation.media.MediaViewerViewModel";
 
       @KeepFieldType
       DashboardViewModel com_antigravity_applocker_presentation_dashboard_DashboardViewModel2;
 
       @KeepFieldType
-      SettingsViewModel com_antigravity_applocker_presentation_settings_SettingsViewModel2;
+      HiddenAppsViewModel com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel2;
 
       @KeepFieldType
       MediaGalleryViewModel com_antigravity_applocker_presentation_media_MediaGalleryViewModel2;
 
       @KeepFieldType
-      MediaViewerViewModel com_antigravity_applocker_presentation_media_MediaViewerViewModel2;
+      SettingsViewModel com_antigravity_applocker_presentation_settings_SettingsViewModel2;
 
       @KeepFieldType
-      HiddenAppsViewModel com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel2;
+      MediaViewerViewModel com_antigravity_applocker_presentation_media_MediaViewerViewModel2;
     }
   }
 
@@ -506,30 +506,30 @@ public final class DaggerAppLockerApplication_HiltComponents_SingletonC {
 
     @IdentifierNameString
     private static final class LazyClassKeyProvider {
-      static String com_antigravity_applocker_presentation_dashboard_DashboardViewModel = "com.antigravity.applocker.presentation.dashboard.DashboardViewModel";
-
       static String com_antigravity_applocker_presentation_media_MediaViewerViewModel = "com.antigravity.applocker.presentation.media.MediaViewerViewModel";
 
-      static String com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel = "com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel";
+      static String com_antigravity_applocker_presentation_dashboard_DashboardViewModel = "com.antigravity.applocker.presentation.dashboard.DashboardViewModel";
 
       static String com_antigravity_applocker_presentation_media_MediaGalleryViewModel = "com.antigravity.applocker.presentation.media.MediaGalleryViewModel";
 
       static String com_antigravity_applocker_presentation_settings_SettingsViewModel = "com.antigravity.applocker.presentation.settings.SettingsViewModel";
 
-      @KeepFieldType
-      DashboardViewModel com_antigravity_applocker_presentation_dashboard_DashboardViewModel2;
+      static String com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel = "com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel";
 
       @KeepFieldType
       MediaViewerViewModel com_antigravity_applocker_presentation_media_MediaViewerViewModel2;
 
       @KeepFieldType
-      HiddenAppsViewModel com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel2;
+      DashboardViewModel com_antigravity_applocker_presentation_dashboard_DashboardViewModel2;
 
       @KeepFieldType
       MediaGalleryViewModel com_antigravity_applocker_presentation_media_MediaGalleryViewModel2;
 
       @KeepFieldType
       SettingsViewModel com_antigravity_applocker_presentation_settings_SettingsViewModel2;
+
+      @KeepFieldType
+      HiddenAppsViewModel com_antigravity_applocker_presentation_hidden_HiddenAppsViewModel2;
     }
 
     private static final class SwitchingProvider<T> implements Provider<T> {

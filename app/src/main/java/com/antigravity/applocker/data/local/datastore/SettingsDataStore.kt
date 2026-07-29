@@ -45,4 +45,12 @@ class SettingsDataStore @Inject constructor(@ApplicationContext private val cont
     suspend fun setAutoLockDelay(delayMs: Long) {
         dataStore.edit { it[AUTO_LOCK_DELAY] = delayMs }
     }
+
+    suspend fun setIntruderSelfieEnabled(enabled: Boolean) {
+        dataStore.edit { it[INTRUDER_SELFIE_ENABLED] = enabled }
+    }
+
+    suspend fun setFakeCrashScreenEnabled(enabled: Boolean) {
+        dataStore.edit { it[FAKE_CRASH_SCREEN_ENABLED] = enabled }
+    }
 }

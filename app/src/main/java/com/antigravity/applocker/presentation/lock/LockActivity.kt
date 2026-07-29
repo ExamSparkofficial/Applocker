@@ -14,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.FragmentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.Color
@@ -41,6 +43,9 @@ class LockActivity : FragmentActivity() {
     
     @Inject
     lateinit var hashUtil: HashUtil
+    
+    @Inject
+    lateinit var settingsDataStore: com.antigravity.applocker.data.local.datastore.SettingsDataStore
 
     companion object {
         const val EXTRA_PACKAGE_NAME = "extra_package_name"
@@ -59,8 +64,13 @@ class LockActivity : FragmentActivity() {
                 onFailed = { /* Fallback to PIN */ }
             )
         }
+        
+        val intruderSelfieHelper = com.antigravity.applocker.util.IntruderSelfieHelper(this, this)
 
         setContent {
+            val isFakeCrashScreenEnabled by settingsDataStore.fakeCrashScreenEnabled.collectAsState(initial = false)
+            val isIntruderSelfieEnabled by settingsDataStore.intruderSelfieEnabled.collectAsState(initial = false)
+
             AppLockerTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -78,7 +88,14 @@ class LockActivity : FragmentActivity() {
                         },
                         isBiometricAvailable = biometricHelper.isBiometricAvailable(this),
                         securityPreferences = securityPreferences,
-                        hashUtil = hashUtil
+                        hashUtil = hashUtil,
+                        isFakeCrashScreenEnabled = isFakeCrashScreenEnabled,
+                        isIntruderSelfieEnabled = isIntruderSelfieEnabled,
+                        onFailedAttempt = { attempts ->
+                            if (isIntruderSelfieEnabled && attempts >= 3) {
+                                intruderSelfieHelper.takePicture(packageName)
+                            }
+                        }
                     )
                 }
             }
@@ -118,11 +135,16 @@ fun LockScreenUI(
     onBiometricClick: () -> Unit,
     isBiometricAvailable: Boolean,
     securityPreferences: SecurityPreferences,
-    hashUtil: HashUtil
+    hashUtil: HashUtil,
+    isFakeCrashScreenEnabled: Boolean,
+    isIntruderSelfieEnabled: Boolean,
+    onFailedAttempt: (Int) -> Unit
 ) {
     var enteredPin by remember { mutableStateOf("") }
     var errorMsg by remember { mutableStateOf("") }
     var showPinPad by remember { mutableStateOf(false) }
+    var showFakeCrash by remember { mutableStateOf(isFakeCrashScreenEnabled) }
+    var failedAttempts by remember { mutableStateOf(0) }
     val requiredPinLength = 4 
     val coroutineScope = rememberCoroutineScope()
 
@@ -133,9 +155,16 @@ fun LockScreenUI(
                 val savedHash = securityPreferences.getHashedPin()
                 
                 val currentHash = hashUtil.hashSHA256(enteredPin, salt)
-                if (currentHash == savedHash) {
+                if (currentHash == savedHash || (securityPreferences.getDecoyHashedPin() != null && currentHash == securityPreferences.getDecoyHashedPin())) {
+                    if (currentHash == securityPreferences.getDecoyHashedPin()) {
+                        com.antigravity.applocker.AppLockerApplication.isDecoyMode = true
+                    } else {
+                        com.antigravity.applocker.AppLockerApplication.isDecoyMode = false
+                    }
                     onUnlockSuccess()
                 } else {
+                    failedAttempts++
+                    onFailedAttempt(failedAttempts)
                     errorMsg = "Incorrect PIN"
                     enteredPin = ""
                 }
@@ -143,95 +172,141 @@ fun LockScreenUI(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        val wallpaperUri = securityPreferences.getWallpaperUri()
-        if (wallpaperUri != null) {
-            coil.compose.AsyncImage(
-                model = wallpaperUri,
-                contentDescription = "Wallpaper",
-                contentScale = androidx.compose.ui.layout.ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.6f))
-            )
-        }
-
-        Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+    if (showFakeCrash) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f)),
+            contentAlignment = Alignment.Center
         ) {
-            Spacer(modifier = Modifier.height(48.dp))
-            Text(
-                text = "App Locked",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.White
-            )
-            Text(
-                text = packageName,
-                style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.7f)
-            )
+            Card(
+                modifier = Modifier
+                    .width(300.dp)
+                    .padding(16.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            ) {
+                Column(modifier = Modifier.padding(24.dp)) {
+                    Text(
+                        text = "Unfortunately, $packageName has stopped.",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(onClick = { /* Does nothing, acts like crash */ }) {
+                            Text("Report")
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        TextButton(
+                            onClick = { /* Normal click does nothing or closes app */ },
+                            modifier = Modifier.pointerInput(Unit) {
+                                detectTapGestures(
+                                    onLongPress = {
+                                        showFakeCrash = false
+                                    }
+                                )
+                            }
+                        ) {
+                            Text("OK")
+                        }
+                    }
+                }
+            }
+        }
+    } else {
+        Box(modifier = Modifier.fillMaxSize()) {
+            val wallpaperUri = securityPreferences.getWallpaperUri()
+            if (wallpaperUri != null) {
+                coil.compose.AsyncImage(
+                    model = wallpaperUri,
+                    contentDescription = "Wallpaper",
+                    contentScale = androidx.compose.ui.layout.ContentScale.Crop,
+                    modifier = Modifier.fillMaxSize()
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.Black.copy(alpha = 0.6f))
+                )
+            }
 
-            if (!showPinPad) {
-                Spacer(modifier = Modifier.weight(1f))
-                if (isBiometricAvailable) {
-                    Icon(
-                        imageVector = Icons.Default.Fingerprint,
-                        contentDescription = "Fingerprint",
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clickable { onBiometricClick() },
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "Touch the fingerprint sensor",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White,
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                }
+            Column(
+                modifier = Modifier.fillMaxSize().padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
                 Spacer(modifier = Modifier.height(48.dp))
-                OutlinedButton(
-                    onClick = { showPinPad = true },
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
-                ) {
-                    Text("Use PIN")
-                }
-                Spacer(modifier = Modifier.height(32.dp))
-            } else {
-                Spacer(modifier = Modifier.height(32.dp))
-                PinDots(
-                    pinLength = requiredPinLength,
-                    currentLength = enteredPin.length
+                Text(
+                    text = "App Locked",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.White
                 )
-                if (errorMsg.isNotEmpty()) {
-                    Text(
-                        text = errorMsg,
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(top = 8.dp)
+                Text(
+                    text = packageName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White.copy(alpha = 0.7f)
+                )
+
+                if (!showPinPad) {
+                    Spacer(modifier = Modifier.weight(1f))
+                    if (isBiometricAvailable) {
+                        Icon(
+                            imageVector = Icons.Default.Fingerprint,
+                            contentDescription = "Fingerprint",
+                            modifier = Modifier
+                                .size(80.dp)
+                                .clickable { onBiometricClick() },
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "Touch the fingerprint sensor",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.White,
+                            modifier = Modifier.padding(top = 16.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(48.dp))
+                    OutlinedButton(
+                        onClick = { showPinPad = true },
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                    ) {
+                        Text("Use PIN")
+                    }
+                    Spacer(modifier = Modifier.height(32.dp))
+                } else {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    PinDots(
+                        pinLength = requiredPinLength,
+                        currentLength = enteredPin.length
                     )
+                    if (errorMsg.isNotEmpty()) {
+                        Text(
+                            text = errorMsg,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(top = 8.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    PinPad(
+                        onNumberClick = { num ->
+                            if (enteredPin.length < requiredPinLength) {
+                                enteredPin += num
+                                errorMsg = ""
+                            }
+                        },
+                        onDeleteClick = {
+                            if (enteredPin.isNotEmpty()) {
+                                enteredPin = enteredPin.dropLast(1)
+                            }
+                        },
+                        onBiometricClick = onBiometricClick,
+                        showBiometricIcon = isBiometricAvailable
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                PinPad(
-                    onNumberClick = { num ->
-                        if (enteredPin.length < requiredPinLength) {
-                            enteredPin += num
-                            errorMsg = ""
-                        }
-                    },
-                    onDeleteClick = {
-                        if (enteredPin.isNotEmpty()) {
-                            enteredPin = enteredPin.dropLast(1)
-                        }
-                    },
-                    onBiometricClick = onBiometricClick,
-                    showBiometricIcon = isBiometricAvailable
-                )
-                Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }

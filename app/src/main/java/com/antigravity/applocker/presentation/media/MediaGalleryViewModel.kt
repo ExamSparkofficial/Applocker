@@ -23,9 +23,6 @@ class MediaGalleryViewModel @Inject constructor(
 ) : ViewModel() {
 
     val mediaList = repository.getAllMedia()
-    
-    private val _deleteRequestFlow = MutableSharedFlow<IntentSender>()
-    val deleteRequestFlow = _deleteRequestFlow.asSharedFlow()
 
     fun hideSelectedMedia(uris: List<Uri>, context: Context) {
         viewModelScope.launch {
@@ -44,28 +41,27 @@ class MediaGalleryViewModel @Inject constructor(
                     }
                 }
                 
-                repository.hideMedia(uri, mimeType, name)
-                
-                if (uri.scheme == "content" && uri.authority?.contains("media") == true) {
-                    urisToDelete.add(uri)
+                if (com.antigravity.applocker.AppLockerApplication.isDecoyMode) {
+                    // Ignore hides in decoy mode
+                    return@launch
                 }
-            }
-            
-            if (urisToDelete.isNotEmpty() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 try {
-                    val pendingIntent = MediaStore.createDeleteRequest(context.contentResolver, urisToDelete)
-                    _deleteRequestFlow.emit(pendingIntent.intentSender)
-                } catch (e: SecurityException) {
-                    e.printStackTrace()
-                }
-            } else if (urisToDelete.isNotEmpty()) {
-                // For older Android versions, we can delete directly
-                for (uri in urisToDelete) {
-                    try {
-                        context.contentResolver.delete(uri, null, null)
-                    } catch (e: Exception) {
-                        e.printStackTrace()
+                    // 1. Hide media in vault (encrypt and save)
+                    val entity = repository.hideMedia(uri, mimeType, name)
+                    
+                    if (entity != null) {
+                        // 2. Delete original using DocumentsContract
+                        val deleteUri = android.provider.DocumentsContract.buildDocumentUriUsingTree(uri, android.provider.DocumentsContract.getDocumentId(uri))
+                        val deleted = android.provider.DocumentsContract.deleteDocument(context.contentResolver, deleteUri)
+                        
+                        if (deleted) {
+                            // Update UI state handled elsewhere
+                        } else {
+                            // Sometimes DocumentsContract.deleteDocument fails depending on URI type
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }

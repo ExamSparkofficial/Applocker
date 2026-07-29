@@ -68,7 +68,18 @@ fun NavGraph(
                         }
                     },
                     securityPreferences = securityPreferences,
-                    hashUtil = hashUtil
+                    hashUtil = hashUtil,
+                    isDecoy = false
+                )
+            }
+            composable("setup_decoy_pin") {
+                SetupPinScreen(
+                    onPinSet = {
+                        navController.popBackStack()
+                    },
+                    securityPreferences = securityPreferences,
+                    hashUtil = hashUtil,
+                    isDecoy = true
                 )
             }
             composable(Routes.Dashboard.route) {
@@ -87,9 +98,20 @@ fun NavGraph(
                     onNavigateToSetupPin = {
                         navController.navigate(Routes.SetupPin.route)
                     },
+                    onNavigateToSetupDecoyPin = {
+                        navController.navigate("setup_decoy_pin")
+                    },
                     onNavigateToHiddenVault = {
                         navController.navigate(Routes.HiddenApps.route)
+                    },
+                    onNavigateToIntruderLogs = {
+                        navController.navigate("intruder_logs")
                     }
+                )
+            }
+            composable("intruder_logs") {
+                com.antigravity.applocker.presentation.settings.IntruderLogsScreen(
+                    onNavigateBack = { navController.popBackStack() }
                 )
             }
             composable(Routes.HiddenApps.route) {

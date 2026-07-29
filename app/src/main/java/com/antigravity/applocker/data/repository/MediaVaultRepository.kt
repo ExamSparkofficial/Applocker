@@ -28,11 +28,19 @@ class MediaVaultRepository @Inject constructor(
         if (!exists()) mkdirs()
     }
 
-    fun getAllMedia(): Flow<List<VaultMediaEntity>> = vaultMediaDao.getAllMedia()
+    fun getAllMedia(): Flow<List<VaultMediaEntity>> {
+        return if (com.antigravity.applocker.AppLockerApplication.isDecoyMode) {
+            kotlinx.coroutines.flow.flowOf(emptyList())
+        } else {
+            vaultMediaDao.getAllMedia()
+        }
+    }
 
     suspend fun getMediaById(id: String): VaultMediaEntity? = vaultMediaDao.getMediaById(id)
 
-    suspend fun hideMedia(uri: Uri, mimeType: String, originalName: String): VaultMediaEntity = withContext(Dispatchers.IO) {
+    suspend fun hideMedia(uri: Uri, mimeType: String, originalName: String): VaultMediaEntity? = withContext(Dispatchers.IO) {
+        if (com.antigravity.applocker.AppLockerApplication.isDecoyMode) return@withContext null
+        
         val id = UUID.randomUUID().toString()
         val encryptedFile = File(mediaDir, "$id.enc")
 
@@ -63,6 +71,7 @@ class MediaVaultRepository @Inject constructor(
     }
 
     suspend fun unhideMedia(media: VaultMediaEntity): Boolean = withContext(Dispatchers.IO) {
+        if (com.antigravity.applocker.AppLockerApplication.isDecoyMode) return@withContext false
         // We need to write back to MediaStore, this is complex with Scoped Storage.
         // For MVP, let's copy to Downloads folder as it's easier.
         // TODO: Implement MediaStore insert.

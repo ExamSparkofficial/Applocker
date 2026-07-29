@@ -27,7 +27,9 @@ import com.antigravity.applocker.lockengine.AppLockerDeviceAdminReceiver
 fun SettingsScreen(
     onNavigateBack: () -> Unit,
     onNavigateToSetupPin: () -> Unit,
+    onNavigateToSetupDecoyPin: () -> Unit,
     onNavigateToHiddenVault: () -> Unit,
+    onNavigateToIntruderLogs: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -62,6 +64,16 @@ fun SettingsScreen(
             context.contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             securityPreferences.saveWallpaperUri(uri.toString())
             wallpaperUri = uri.toString()
+        }
+    }
+
+    val cameraPermissionLauncher = androidx.activity.compose.rememberLauncherForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            viewModel.toggleIntruderSelfie(true)
+        } else {
+            viewModel.toggleIntruderSelfie(false)
         }
     }
 
@@ -135,9 +147,34 @@ fun SettingsScreen(
             
             item {
                 SettingsItem(
+                    title = "Set Fake Vault (Decoy PIN)",
+                    subtitle = "Set a secondary PIN that opens an empty vault to fool intruders",
+                    onClick = onNavigateToSetupDecoyPin
+                )
+            }
+            
+            item {
+                SettingsItem(
                     title = "Manage Hidden Vault",
                     subtitle = "Hide apps from your home screen (Requires Device Owner)",
                     onClick = onNavigateToHiddenVault
+                )
+            }
+            
+            item {
+                SettingsItem(
+                    title = "Intruder Logs",
+                    subtitle = "View photos taken of people trying to unlock your apps",
+                    onClick = onNavigateToIntruderLogs
+                )
+            }
+            
+            item {
+                SettingsSwitch(
+                    title = "Fake Crash Screen",
+                    subtitle = "Show a fake error instead of a PIN pad when opening locked apps",
+                    checked = uiState.fakeCrashScreenEnabled,
+                    onCheckedChange = viewModel::toggleFakeCrashScreen
                 )
             }
             
@@ -184,8 +221,13 @@ fun SettingsScreen(
                     title = "Intruder Selfie",
                     subtitle = "Take a photo after 3 failed attempts",
                     checked = uiState.intruderSelfieEnabled,
-                    onCheckedChange = { /* viewModel.toggleIntruderSelfie */ },
-                    enabled = false // Needs Camera permission flow
+                    onCheckedChange = { enabled -> 
+                        if (enabled) {
+                            cameraPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+                        } else {
+                            viewModel.toggleIntruderSelfie(false)
+                        }
+                    }
                 )
             }
         }

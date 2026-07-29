@@ -13,14 +13,24 @@ class AppLockerRepositoryImpl @Inject constructor(
     private val dao: AppLockerDao
 ) : AppLockerRepository {
 
-    override fun getAllLockedApps(): Flow<List<LockedAppEntity>> = dao.getAllLockedApps()
+    override fun getAllLockedApps(): Flow<List<LockedAppEntity>> {
+        return if (com.antigravity.applocker.AppLockerApplication.isDecoyMode) {
+            kotlinx.coroutines.flow.flowOf(emptyList())
+        } else {
+            dao.getAllLockedApps()
+        }
+    }
 
     override suspend fun lockApp(packageName: String) {
-        dao.insertLockedApp(LockedAppEntity(packageName = packageName, isLocked = true))
+        if (!com.antigravity.applocker.AppLockerApplication.isDecoyMode) {
+            dao.insertLockedApp(LockedAppEntity(packageName = packageName, isLocked = true))
+        }
     }
 
     override suspend fun unlockApp(packageName: String) {
-        dao.deleteLockedApp(packageName)
+        if (!com.antigravity.applocker.AppLockerApplication.isDecoyMode) {
+            dao.deleteLockedApp(packageName)
+        }
     }
 
     override suspend fun addIntruderLog(log: IntruderLogEntity) {

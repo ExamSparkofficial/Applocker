@@ -20,13 +20,15 @@ class SettingsViewModel @Inject constructor(
         settingsDataStore.isDarkMode,
         settingsDataStore.isAmoledMode,
         settingsDataStore.autoLockDelay,
-        settingsDataStore.intruderSelfieEnabled
-    ) { isDark, isAmoled, delay, selfie ->
+        settingsDataStore.intruderSelfieEnabled,
+        settingsDataStore.fakeCrashScreenEnabled
+    ) { isDark, isAmoled, delay, selfie, fakeCrash ->
         SettingsUiState(
             isDarkMode = isDark,
             isAmoledMode = isAmoled,
             autoLockDelay = delay,
-            intruderSelfieEnabled = selfie
+            intruderSelfieEnabled = selfie,
+            fakeCrashScreenEnabled = fakeCrash
         )
     }.stateIn(
         scope = viewModelScope,
@@ -45,11 +47,20 @@ class SettingsViewModel @Inject constructor(
     fun setAutoLockDelay(delay: Long) {
         viewModelScope.launch { settingsDataStore.setAutoLockDelay(delay) }
     }
+
+    fun toggleIntruderSelfie(enabled: Boolean) {
+        viewModelScope.launch { settingsDataStore.setIntruderSelfieEnabled(enabled) }
+    }
+
+    fun toggleFakeCrashScreen(enabled: Boolean) {
+        viewModelScope.launch { settingsDataStore.setFakeCrashScreenEnabled(enabled) }
+    }
 }
 
 data class SettingsUiState(
     val isDarkMode: Boolean = true,
     val isAmoledMode: Boolean = false,
     val autoLockDelay: Long = 0L,
-    val intruderSelfieEnabled: Boolean = false
+    val intruderSelfieEnabled: Boolean = false,
+    val fakeCrashScreenEnabled: Boolean = false
 )

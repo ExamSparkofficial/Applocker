@@ -16,7 +16,8 @@ import kotlinx.coroutines.launch
 fun SetupPinScreen(
     onPinSet: () -> Unit,
     securityPreferences: SecurityPreferences,
-    hashUtil: HashUtil
+    hashUtil: HashUtil,
+    isDecoy: Boolean = false
 ) {
     var step by remember { mutableStateOf(1) } // 1: Enter, 2: Confirm
     var firstPin by remember { mutableStateOf("") }
@@ -35,11 +36,24 @@ fun SetupPinScreen(
             } else if (step == 2) {
                 if (currentPin == firstPin) {
                     coroutineScope.launch {
-                        // Generate a salt and hash
-                        val salt = System.currentTimeMillis().toString()
+                        // Generate or retrieve salt
+                        val salt = if (isDecoy) {
+                            securityPreferences.getSalt() ?: System.currentTimeMillis().toString()
+                        } else {
+                            System.currentTimeMillis().toString()
+                        }
+                        
                         val hash = hashUtil.hashSHA256(currentPin, salt)
-                        securityPreferences.saveSalt(salt)
-                        securityPreferences.saveHashedPin(hash)
+                        if (isDecoy) {
+                            securityPreferences.saveDecoyHashedPin(hash)
+                            // If somehow there was no main PIN set yet, we should save this salt
+                            if (securityPreferences.getSalt() == null) {
+                                securityPreferences.saveSalt(salt)
+                            }
+                        } else {
+                            securityPreferences.saveSalt(salt)
+                            securityPreferences.saveHashedPin(hash)
+                        }
                         onPinSet()
                     }
                 } else {
@@ -59,7 +73,11 @@ fun SetupPinScreen(
     ) {
         Spacer(modifier = Modifier.height(32.dp))
         Text(
-            text = if (step == 1) "Set a new PIN" else "Confirm your PIN",
+            text = if (step == 1) {
+                if (isDecoy) "Set Decoy PIN" else "Set a new PIN"
+            } else {
+                "Confirm your PIN"
+            },
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary
         )

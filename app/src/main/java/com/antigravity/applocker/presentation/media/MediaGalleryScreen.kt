@@ -34,18 +34,7 @@ fun MediaGalleryScreen(
     val mediaList by viewModel.mediaList.collectAsState(initial = emptyList())
     val context = LocalContext.current
 
-    val deleteLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartIntentSenderForResult()
-    ) { result ->
-        // Handle result if needed (e.g., if user denied deletion, we might want to know)
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.deleteRequestFlow.collect { intentSender ->
-            val request = androidx.activity.result.IntentSenderRequest.Builder(intentSender).build()
-            deleteLauncher.launch(request)
-        }
-    }
+    // Delete launcher removed since deletion is handled by ViewModel directly
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenMultipleDocuments()
