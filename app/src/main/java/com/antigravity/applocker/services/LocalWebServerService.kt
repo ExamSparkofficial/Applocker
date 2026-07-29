@@ -94,10 +94,10 @@ class LocalWebServerService : Service() {
                         // or better, respondOutputStream.
                         call.respondBytes(inputStream.readBytes())
                     } else {
-                        io.ktor.server.response.respond(call, io.ktor.http.HttpStatusCode.NotFound)
+                        call.respond(io.ktor.http.HttpStatusCode.NotFound, "")
                     }
                 } else {
-                    io.ktor.server.response.respond(call, io.ktor.http.HttpStatusCode.NotFound)
+                    call.respond(io.ktor.http.HttpStatusCode.NotFound, "")
                 }
             }
         }
