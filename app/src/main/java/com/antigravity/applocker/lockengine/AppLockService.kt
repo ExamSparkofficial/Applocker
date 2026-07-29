@@ -31,56 +31,6 @@ class AppLockService : Service() {
         createNotificationChannel()
         startForeground(NOTIFICATION_ID, createNotification())
         appLockerEngine.start()
-        
-        // Start Gesture Overlay directly inside this Foreground Service
-        if (android.provider.Settings.canDrawOverlays(this)) {
-            setupGestureOverlay()
-        }
-    }
-
-    private fun setupGestureOverlay() {
-        windowManager = getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
-        overlayView = android.view.View(this)
-        
-        overlayView?.setOnTouchListener(object : android.view.View.OnTouchListener {
-            var startY = 0f
-            override fun onTouch(v: android.view.View, event: android.view.MotionEvent): Boolean {
-                if (event.pointerCount == 2) {
-                    when (event.actionMasked) {
-                        android.view.MotionEvent.ACTION_POINTER_DOWN -> {
-                            startY = (event.getY(0) + event.getY(1)) / 2
-                        }
-                        android.view.MotionEvent.ACTION_POINTER_UP -> {
-                            val endY = (event.getY(0) + event.getY(1)) / 2
-                            if (endY - startY > 100) { // Swiped down
-                                launchVault()
-                            }
-                        }
-                    }
-                }
-                return true
-            }
-        })
-
-        val params = android.view.WindowManager.LayoutParams(
-            android.view.WindowManager.LayoutParams.MATCH_PARENT,
-            100, // Very thin strip at the top
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) 
-                android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY 
-            else 
-                android.view.WindowManager.LayoutParams.TYPE_PHONE,
-            android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                    android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                    android.view.WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
-            android.graphics.PixelFormat.TRANSLUCENT
-        )
-        params.gravity = android.view.Gravity.TOP or android.view.Gravity.CENTER_HORIZONTAL
-        
-        try {
-            windowManager?.addView(overlayView, params)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     private fun launchVault() {
