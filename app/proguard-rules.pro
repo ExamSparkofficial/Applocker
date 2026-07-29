@@ -28,3 +28,9 @@
 # Suppress missing class warnings for annotations that are not strictly required at runtime
 -dontwarn com.google.errorprone.annotations.**
 -dontwarn javax.annotation.**
+
+# Ktor Server and its dependencies
+-dontwarn java.lang.management.**
+-dontwarn org.slf4j.**
+-dontwarn io.ktor.**
+-keep class io.ktor.** { *; }
