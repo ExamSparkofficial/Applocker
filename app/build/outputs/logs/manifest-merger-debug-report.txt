@@ -5,6 +5,7 @@ INJECTED from C:\Users\Surya\.gemini\antigravity\scratch\AppLocker\app\src\main\
 INJECTED from C:\Users\Surya\.gemini\antigravity\scratch\AppLocker\app\src\main\AndroidManifest.xml:2:1-101:12
 INJECTED from C:\Users\Surya\.gemini\antigravity\scratch\AppLocker\app\src\main\AndroidManifest.xml:2:1-101:12
 MERGED from [androidx.biometric:biometric:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\22b82902a736321aae5e18d469b69861\transformed\biometric-1.1.0\AndroidManifest.xml:17:1-29:12
+MERGED from [io.coil-kt:coil-video:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\bf53b92faabe7a595094ed34a70cb1a4\transformed\coil-video-2.6.0\AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\2ba7e8535b67d344a142cf72dcf87453\transformed\coil-compose-2.6.0\AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil-compose-base:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\5e8ca45aa3f4eccc084680e4219fcf20\transformed\coil-compose-base-2.6.0\AndroidManifest.xml:2:1-7:12
 MERGED from [io.coil-kt:coil:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\e046250bbaadba4fe6a1050d89a85a92\transformed\coil-2.6.0\AndroidManifest.xml:2:1-7:12
@@ -16,6 +17,14 @@ MERGED from [androidx.hilt:hilt-navigation:1.2.0] C:\Users\Surya\.gradle\caches\
 MERGED from [com.google.dagger:hilt-android:2.51.1] C:\Users\Surya\.gradle\caches\transforms-4\88b609299bb6711f970069abf7d329c7\transformed\hilt-android-2.51.1\AndroidManifest.xml:16:1-19:12
 MERGED from [androidx.fragment:fragment:1.6.2] C:\Users\Surya\.gradle\caches\transforms-4\987118cb59bae654722369c18c903d5e\transformed\fragment-1.6.2\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.fragment:fragment-ktx:1.6.2] C:\Users\Surya\.gradle\caches\transforms-4\1058f1a0d39441cb645fdcc8b37c5e98\transformed\fragment-ktx-1.6.2\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-ui:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\ec8e068dcf2c13d31d5cee12e5a30b5d\transformed\media3-ui-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-extractor:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\30331d56f0bac19397a76e21521cf08f\transformed\media3-extractor-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-container:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\5657a2b1a81ed9f9527dc25b247ae35e\transformed\media3-container-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-datasource:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\b4fdea2d8cf65425e292f200545fd5c4\transformed\media3-datasource-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-decoder:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\b772ab98c82cb465306f14315ef89127\transformed\media3-decoder-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-database:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\f85cb2a80da9b436b81044a292952c91\transformed\media3-database-1.3.1\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media3:media3-common:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\79f8aaa9090febd1f814da98b5c50a98\transformed\media3-common-1.3.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\878327b5e360f668b14ca1053dc5930c\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\abf88e66db8ef6ec2144262f06a76e1e\transformed\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-common:2.7.7] C:\Users\Surya\.gradle\caches\transforms-4\812a58cead26dd3b4544e1c60ff3c544\transformed\navigation-common-2.7.7\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-runtime:2.7.7] C:\Users\Surya\.gradle\caches\transforms-4\25ffe16be3d864251ba2687a8f0eabdc\transformed\navigation-runtime-2.7.7\AndroidManifest.xml:17:1-22:12
@@ -60,6 +69,8 @@ MERGED from [androidx.compose.ui:ui-android:1.6.7] C:\Users\Surya\.gradle\caches
 MERGED from [androidx.activity:activity-ktx:1.9.0] C:\Users\Surya\.gradle\caches\transforms-4\f57c5dc704df8381f6aa6bee0f2fa14c\transformed\activity-ktx-1.9.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.activity:activity-compose:1.9.0] C:\Users\Surya\.gradle\caches\transforms-4\c3ac243b1f49dc44ff1049fce8dd4bbc\transformed\activity-compose-1.9.0\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.activity:activity:1.9.0] C:\Users\Surya\.gradle\caches\transforms-4\425fad53a8b5d41201b3dc12084ef3b4\transformed\activity-1.9.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.media:media:1.7.0] C:\Users\Surya\.gradle\caches\transforms-4\38354c1b92405006e8092b9c878c4297\transformed\media-1.7.0\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\Surya\.gradle\caches\transforms-4\52729622676b6e0147c1b2d8f770b451\transformed\recyclerview-1.3.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\7465035e577c3ec4d052acd0501a10d2\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\811daa284612347f9bab08ba845a41f5\transformed\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\f3b960c5db851397c4d49a6d532549c2\transformed\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
@@ -79,10 +90,10 @@ MERGED from [androidx.annotation:annotation-experimental:1.4.0] C:\Users\Surya\.
 MERGED from [androidx.compose.runtime:runtime-saveable-android:1.6.7] C:\Users\Surya\.gradle\caches\transforms-4\fe02a83556c8fff5edf1cb91668a31d3\transformed\runtime-saveable-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.runtime:runtime-android:1.6.7] C:\Users\Surya\.gradle\caches\transforms-4\a532275b55f0531f6ec542963987f211\transformed\runtime-release\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.security:security-crypto:1.1.0-alpha06] C:\Users\Surya\.gradle\caches\transforms-4\491888da0f65d382ab0565a6e07bddca\transformed\security-crypto-1.1.0-alpha06\AndroidManifest.xml:17:1-22:12
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Surya\.gradle\caches\transforms-4\50fa8d34539d1974a7735583d29ad075\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\cfed651fb4fb5c61c832e730cc35c1eb\transformed\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Surya\.gradle\caches\transforms-4\503eec795ea883f8e7a4e1bc373c975b\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\8682302adea993ce054dcbe6a770db74\transformed\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Surya\.gradle\caches\transforms-4\50fa8d34539d1974a7735583d29ad075\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:17:1-27:12
 MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\ea8a5ef1ffbee050ee37d71d7b9540f9\transformed\profileinstaller-1.3.1\AndroidManifest.xml:17:1-55:12
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Surya\.gradle\caches\transforms-4\6932a0bd87f49da3a226dad607f36b6c\transformed\startup-runtime-1.1.1\AndroidManifest.xml:17:1-33:12
 MERGED from [androidx.tracing:tracing:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\a8e56ec6c75e64de3c896eef1c4e1fff\transformed\tracing-1.0.0\AndroidManifest.xml:17:1-24:12
@@ -305,6 +316,8 @@ INJECTED from C:\Users\Surya\.gemini\antigravity\scratch\AppLocker\app\src\main\
 INJECTED from C:\Users\Surya\.gemini\antigravity\scratch\AppLocker\app\src\main\AndroidManifest.xml
 MERGED from [androidx.biometric:biometric:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\22b82902a736321aae5e18d469b69861\transformed\biometric-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.biometric:biometric:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\22b82902a736321aae5e18d469b69861\transformed\biometric-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [io.coil-kt:coil-video:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\bf53b92faabe7a595094ed34a70cb1a4\transformed\coil-video-2.6.0\AndroidManifest.xml:5:5-44
+MERGED from [io.coil-kt:coil-video:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\bf53b92faabe7a595094ed34a70cb1a4\transformed\coil-video-2.6.0\AndroidManifest.xml:5:5-44
 MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\2ba7e8535b67d344a142cf72dcf87453\transformed\coil-compose-2.6.0\AndroidManifest.xml:5:5-44
 MERGED from [io.coil-kt:coil-compose:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\2ba7e8535b67d344a142cf72dcf87453\transformed\coil-compose-2.6.0\AndroidManifest.xml:5:5-44
 MERGED from [io.coil-kt:coil-compose-base:2.6.0] C:\Users\Surya\.gradle\caches\transforms-4\5e8ca45aa3f4eccc084680e4219fcf20\transformed\coil-compose-base-2.6.0\AndroidManifest.xml:5:5-44
@@ -327,6 +340,22 @@ MERGED from [androidx.fragment:fragment:1.6.2] C:\Users\Surya\.gradle\caches\tra
 MERGED from [androidx.fragment:fragment:1.6.2] C:\Users\Surya\.gradle\caches\transforms-4\987118cb59bae654722369c18c903d5e\transformed\fragment-1.6.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.fragment:fragment-ktx:1.6.2] C:\Users\Surya\.gradle\caches\transforms-4\1058f1a0d39441cb645fdcc8b37c5e98\transformed\fragment-ktx-1.6.2\AndroidManifest.xml:20:5-44
 MERGED from [androidx.fragment:fragment-ktx:1.6.2] C:\Users\Surya\.gradle\caches\transforms-4\1058f1a0d39441cb645fdcc8b37c5e98\transformed\fragment-ktx-1.6.2\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-ui:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\ec8e068dcf2c13d31d5cee12e5a30b5d\transformed\media3-ui-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-ui:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\ec8e068dcf2c13d31d5cee12e5a30b5d\transformed\media3-ui-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-extractor:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\30331d56f0bac19397a76e21521cf08f\transformed\media3-extractor-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-extractor:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\30331d56f0bac19397a76e21521cf08f\transformed\media3-extractor-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-container:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\5657a2b1a81ed9f9527dc25b247ae35e\transformed\media3-container-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-container:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\5657a2b1a81ed9f9527dc25b247ae35e\transformed\media3-container-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-datasource:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\b4fdea2d8cf65425e292f200545fd5c4\transformed\media3-datasource-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-datasource:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\b4fdea2d8cf65425e292f200545fd5c4\transformed\media3-datasource-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-decoder:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\b772ab98c82cb465306f14315ef89127\transformed\media3-decoder-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-decoder:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\b772ab98c82cb465306f14315ef89127\transformed\media3-decoder-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-database:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\f85cb2a80da9b436b81044a292952c91\transformed\media3-database-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-database:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\f85cb2a80da9b436b81044a292952c91\transformed\media3-database-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-common:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\79f8aaa9090febd1f814da98b5c50a98\transformed\media3-common-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-common:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\79f8aaa9090febd1f814da98b5c50a98\transformed\media3-common-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\878327b5e360f668b14ca1053dc5930c\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\878327b5e360f668b14ca1053dc5930c\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:20:5-44
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\abf88e66db8ef6ec2144262f06a76e1e\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\abf88e66db8ef6ec2144262f06a76e1e\transformed\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.navigation:navigation-common:2.7.7] C:\Users\Surya\.gradle\caches\transforms-4\812a58cead26dd3b4544e1c60ff3c544\transformed\navigation-common-2.7.7\AndroidManifest.xml:20:5-44
@@ -415,6 +444,10 @@ MERGED from [androidx.activity:activity-compose:1.9.0] C:\Users\Surya\.gradle\ca
 MERGED from [androidx.activity:activity-compose:1.9.0] C:\Users\Surya\.gradle\caches\transforms-4\c3ac243b1f49dc44ff1049fce8dd4bbc\transformed\activity-compose-1.9.0\AndroidManifest.xml:5:5-44
 MERGED from [androidx.activity:activity:1.9.0] C:\Users\Surya\.gradle\caches\transforms-4\425fad53a8b5d41201b3dc12084ef3b4\transformed\activity-1.9.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.activity:activity:1.9.0] C:\Users\Surya\.gradle\caches\transforms-4\425fad53a8b5d41201b3dc12084ef3b4\transformed\activity-1.9.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.media:media:1.7.0] C:\Users\Surya\.gradle\caches\transforms-4\38354c1b92405006e8092b9c878c4297\transformed\media-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.media:media:1.7.0] C:\Users\Surya\.gradle\caches\transforms-4\38354c1b92405006e8092b9c878c4297\transformed\media-1.7.0\AndroidManifest.xml:5:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\Surya\.gradle\caches\transforms-4\52729622676b6e0147c1b2d8f770b451\transformed\recyclerview-1.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.recyclerview:recyclerview:1.3.0] C:\Users\Surya\.gradle\caches\transforms-4\52729622676b6e0147c1b2d8f770b451\transformed\recyclerview-1.3.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\7465035e577c3ec4d052acd0501a10d2\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\7465035e577c3ec4d052acd0501a10d2\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\811daa284612347f9bab08ba845a41f5\transformed\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
@@ -453,14 +486,14 @@ MERGED from [androidx.compose.runtime:runtime-android:1.6.7] C:\Users\Surya\.gra
 MERGED from [androidx.compose.runtime:runtime-android:1.6.7] C:\Users\Surya\.gradle\caches\transforms-4\a532275b55f0531f6ec542963987f211\transformed\runtime-release\AndroidManifest.xml:5:5-44
 MERGED from [androidx.security:security-crypto:1.1.0-alpha06] C:\Users\Surya\.gradle\caches\transforms-4\491888da0f65d382ab0565a6e07bddca\transformed\security-crypto-1.1.0-alpha06\AndroidManifest.xml:20:5-44
 MERGED from [androidx.security:security-crypto:1.1.0-alpha06] C:\Users\Surya\.gradle\caches\transforms-4\491888da0f65d382ab0565a6e07bddca\transformed\security-crypto-1.1.0-alpha06\AndroidManifest.xml:20:5-44
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Surya\.gradle\caches\transforms-4\50fa8d34539d1974a7735583d29ad075\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Surya\.gradle\caches\transforms-4\50fa8d34539d1974a7735583d29ad075\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\cfed651fb4fb5c61c832e730cc35c1eb\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\cfed651fb4fb5c61c832e730cc35c1eb\transformed\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Surya\.gradle\caches\transforms-4\503eec795ea883f8e7a4e1bc373c975b\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Surya\.gradle\caches\transforms-4\503eec795ea883f8e7a4e1bc373c975b\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\8682302adea993ce054dcbe6a770db74\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Surya\.gradle\caches\transforms-4\8682302adea993ce054dcbe6a770db74\transformed\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Surya\.gradle\caches\transforms-4\50fa8d34539d1974a7735583d29ad075\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\Surya\.gradle\caches\transforms-4\50fa8d34539d1974a7735583d29ad075\transformed\versionedparcelable-1.1.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\ea8a5ef1ffbee050ee37d71d7b9540f9\transformed\profileinstaller-1.3.1\AndroidManifest.xml:21:5-44
 MERGED from [androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\ea8a5ef1ffbee050ee37d71d7b9540f9\transformed\profileinstaller-1.3.1\AndroidManifest.xml:21:5-44
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Surya\.gradle\caches\transforms-4\6932a0bd87f49da3a226dad607f36b6c\transformed\startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
@@ -479,6 +512,12 @@ uses-permission#android.permission.USE_FINGERPRINT
 ADDED from [androidx.biometric:biometric:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\22b82902a736321aae5e18d469b69861\transformed\biometric-1.1.0\AndroidManifest.xml:27:5-74
 	android:name
 		ADDED from [androidx.biometric:biometric:1.1.0] C:\Users\Surya\.gradle\caches\transforms-4\22b82902a736321aae5e18d469b69861\transformed\biometric-1.1.0\AndroidManifest.xml:27:22-71
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [androidx.media3:media3-common:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\79f8aaa9090febd1f814da98b5c50a98\transformed\media3-common-1.3.1\AndroidManifest.xml:22:5-79
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\878327b5e360f668b14ca1053dc5930c\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:22:5-79
+MERGED from [androidx.media3:media3-exoplayer:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\878327b5e360f668b14ca1053dc5930c\transformed\media3-exoplayer-1.3.1\AndroidManifest.xml:22:5-79
+	android:name
+		ADDED from [androidx.media3:media3-common:1.3.1] C:\Users\Surya\.gradle\caches\transforms-4\79f8aaa9090febd1f814da98b5c50a98\transformed\media3-common-1.3.1\AndroidManifest.xml:22:22-76
 activity#androidx.compose.ui.tooling.PreviewActivity
 ADDED from [androidx.compose.ui:ui-tooling-android:1.6.7] C:\Users\Surya\.gradle\caches\transforms-4\2d1ebc86e876bf33d95594661ecccc1f\transformed\ui-tooling-release\AndroidManifest.xml:23:9-25:39
 	android:exported

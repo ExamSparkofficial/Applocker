@@ -8,6 +8,8 @@ import com.antigravity.applocker.lockengine.AppLockService_GeneratedInjector;
 import com.antigravity.applocker.presentation.dashboard.DashboardViewModel_HiltModules;
 import com.antigravity.applocker.presentation.hidden.HiddenAppsViewModel_HiltModules;
 import com.antigravity.applocker.presentation.lock.LockActivity_GeneratedInjector;
+import com.antigravity.applocker.presentation.media.MediaGalleryViewModel_HiltModules;
+import com.antigravity.applocker.presentation.media.MediaViewerViewModel_HiltModules;
 import com.antigravity.applocker.presentation.settings.SettingsViewModel_HiltModules;
 import dagger.Binds;
 import dagger.Component;
@@ -170,6 +172,8 @@ public final class AppLockerApplication_HiltComponents {
           HiddenAppsViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
           HiltWrapper_SavedStateHandleModule.class,
+          MediaGalleryViewModel_HiltModules.KeyModule.class,
+          MediaViewerViewModel_HiltModules.KeyModule.class,
           SettingsViewModel_HiltModules.KeyModule.class
       }
   )
@@ -210,6 +214,8 @@ public final class AppLockerApplication_HiltComponents {
           DashboardViewModel_HiltModules.BindsModule.class,
           HiddenAppsViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
+          MediaGalleryViewModel_HiltModules.BindsModule.class,
+          MediaViewerViewModel_HiltModules.BindsModule.class,
           SettingsViewModel_HiltModules.BindsModule.class
       }
   )

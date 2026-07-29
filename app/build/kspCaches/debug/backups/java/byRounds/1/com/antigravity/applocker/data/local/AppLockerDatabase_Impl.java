@@ -34,17 +34,20 @@ public final class AppLockerDatabase_Impl extends AppLockerDatabase {
 
   private volatile HiddenAppDao _hiddenAppDao;
 
+  private volatile VaultMediaDao _vaultMediaDao;
+
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(3) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `locked_apps` (`packageName` TEXT NOT NULL, `isLocked` INTEGER NOT NULL, PRIMARY KEY(`packageName`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS `intruder_logs` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `timestamp` INTEGER NOT NULL, `packageName` TEXT NOT NULL, `photoPath` TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `hidden_apps` (`packageName` TEXT NOT NULL, PRIMARY KEY(`packageName`))");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `vault_media` (`id` TEXT NOT NULL, `originalFileName` TEXT NOT NULL, `mimeType` TEXT NOT NULL, `encryptedFilePath` TEXT NOT NULL, `encryptedThumbnailPath` TEXT NOT NULL, `dateAdded` INTEGER NOT NULL, PRIMARY KEY(`id`))");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9463811ce82ef6e5a83881d559fe7811')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '576724dfa82eb87619917450128ca73b')");
       }
 
       @Override
@@ -52,6 +55,7 @@ public final class AppLockerDatabase_Impl extends AppLockerDatabase {
         db.execSQL("DROP TABLE IF EXISTS `locked_apps`");
         db.execSQL("DROP TABLE IF EXISTS `intruder_logs`");
         db.execSQL("DROP TABLE IF EXISTS `hidden_apps`");
+        db.execSQL("DROP TABLE IF EXISTS `vault_media`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -132,9 +136,25 @@ public final class AppLockerDatabase_Impl extends AppLockerDatabase {
                   + " Expected:\n" + _infoHiddenApps + "\n"
                   + " Found:\n" + _existingHiddenApps);
         }
+        final HashMap<String, TableInfo.Column> _columnsVaultMedia = new HashMap<String, TableInfo.Column>(6);
+        _columnsVaultMedia.put("id", new TableInfo.Column("id", "TEXT", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsVaultMedia.put("originalFileName", new TableInfo.Column("originalFileName", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsVaultMedia.put("mimeType", new TableInfo.Column("mimeType", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsVaultMedia.put("encryptedFilePath", new TableInfo.Column("encryptedFilePath", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsVaultMedia.put("encryptedThumbnailPath", new TableInfo.Column("encryptedThumbnailPath", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsVaultMedia.put("dateAdded", new TableInfo.Column("dateAdded", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysVaultMedia = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesVaultMedia = new HashSet<TableInfo.Index>(0);
+        final TableInfo _infoVaultMedia = new TableInfo("vault_media", _columnsVaultMedia, _foreignKeysVaultMedia, _indicesVaultMedia);
+        final TableInfo _existingVaultMedia = TableInfo.read(db, "vault_media");
+        if (!_infoVaultMedia.equals(_existingVaultMedia)) {
+          return new RoomOpenHelper.ValidationResult(false, "vault_media(com.antigravity.applocker.data.local.VaultMediaEntity).\n"
+                  + " Expected:\n" + _infoVaultMedia + "\n"
+                  + " Found:\n" + _existingVaultMedia);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "9463811ce82ef6e5a83881d559fe7811", "0704e380ea3df3ca59cafc7dd1ce7dea");
+    }, "576724dfa82eb87619917450128ca73b", "5953c1f19e94dbfd0c7c19741af4b1fd");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -145,7 +165,7 @@ public final class AppLockerDatabase_Impl extends AppLockerDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "locked_apps","intruder_logs","hidden_apps");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "locked_apps","intruder_logs","hidden_apps","vault_media");
   }
 
   @Override
@@ -157,6 +177,7 @@ public final class AppLockerDatabase_Impl extends AppLockerDatabase {
       _db.execSQL("DELETE FROM `locked_apps`");
       _db.execSQL("DELETE FROM `intruder_logs`");
       _db.execSQL("DELETE FROM `hidden_apps`");
+      _db.execSQL("DELETE FROM `vault_media`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
@@ -173,6 +194,7 @@ public final class AppLockerDatabase_Impl extends AppLockerDatabase {
     final HashMap<Class<?>, List<Class<?>>> _typeConvertersMap = new HashMap<Class<?>, List<Class<?>>>();
     _typeConvertersMap.put(AppLockerDao.class, AppLockerDao_Impl.getRequiredConverters());
     _typeConvertersMap.put(HiddenAppDao.class, HiddenAppDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(VaultMediaDao.class, VaultMediaDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -215,6 +237,20 @@ public final class AppLockerDatabase_Impl extends AppLockerDatabase {
           _hiddenAppDao = new HiddenAppDao_Impl(this);
         }
         return _hiddenAppDao;
+      }
+    }
+  }
+
+  @Override
+  public VaultMediaDao getVaultMediaDao() {
+    if (_vaultMediaDao != null) {
+      return _vaultMediaDao;
+    } else {
+      synchronized(this) {
+        if(_vaultMediaDao == null) {
+          _vaultMediaDao = new VaultMediaDao_Impl(this);
+        }
+        return _vaultMediaDao;
       }
     }
   }

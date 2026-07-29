@@ -21,6 +21,7 @@
 
     <!-- suppress DeprecatedClassUsageInspection -->
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <permission
         android:name="com.antigravity.applocker.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"

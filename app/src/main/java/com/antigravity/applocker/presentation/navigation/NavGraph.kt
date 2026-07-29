@@ -79,6 +79,9 @@ fun NavGraph(
                 DashboardScreen(
                     onNavigateToSettings = {
                         navController.navigate(Routes.Settings.route)
+                    },
+                    onOpenDrawer = {
+                        scope.launch { drawerState.open() }
                     }
                 )
             }

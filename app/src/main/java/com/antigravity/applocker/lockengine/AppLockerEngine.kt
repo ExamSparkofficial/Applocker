@@ -34,9 +34,18 @@ class AppLockerEngine @Inject constructor(
     
     // Keeps track of temporarily unhidden app
     private var tempUnhiddenApp: String? = null
+    
+    private var cachedLockedApps: Set<String> = emptySet()
 
     fun start() {
         if (pollingJob?.isActive == true) return
+        
+        // Cache locked apps to avoid querying SQLite every 200ms
+        coroutineScope.launch {
+            repository.getAllLockedApps().collect { lockedAppsList ->
+                cachedLockedApps = lockedAppsList.map { it.packageName }.toSet()
+            }
+        }
         
         pollingJob = coroutineScope.launch {
             while (isActive) {
@@ -82,8 +91,7 @@ class AppLockerEngine @Inject constructor(
         // Never lock our own LockActivity to prevent infinite loops
         if (topPackage == context.packageName && topClass.contains("LockActivity")) return
 
-        val lockedApps = repository.getAllLockedApps().firstOrNull() ?: emptyList()
-        val isLocked = lockedApps.any { it.packageName == topPackage }
+        val isLocked = cachedLockedApps.contains(topPackage)
 
         if (topPackage != context.packageName && topPackage != lastUnlockedApp) {
             // User left the unlocked app, clear the grace state so it locks instantly next time
