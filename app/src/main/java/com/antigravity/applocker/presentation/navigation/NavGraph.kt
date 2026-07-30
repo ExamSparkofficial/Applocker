@@ -138,6 +138,11 @@ fun NavGraph(
                 val packageName = backStackEntry.arguments?.getString("packageName")
                 // LockScreen(packageName)
             }
+            composable(Routes.FileSharing.route) {
+                com.antigravity.applocker.presentation.sharing.FileSharingScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
+            }
         }
     }
 }
